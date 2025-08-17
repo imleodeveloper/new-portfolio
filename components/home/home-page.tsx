@@ -60,7 +60,7 @@ export function HomePage() {
                 Principais Projetos
               </button>
             </div>
-            <div className="bg-gray-900 p-4 rounded-xs flex flex-col justify-start items-start gap-4">
+            <div className="w-full bg-gray-900 p-4 rounded-xs flex flex-col justify-start items-start gap-4">
               <h1 className="text-3xl font-bold">Sobre Mim</h1>
               <p>
                 Atuo na área de T.I há 3 anos, sendo 2 deles dedicados ao
@@ -70,6 +70,7 @@ export function HomePage() {
                 último semestre do bacharelado sistemas de informação e
                 envolvido em diversos projetos de desenvolvimento web.
               </p>
+              <div className="w-full"></div>
             </div>
           </div>
         </div>
