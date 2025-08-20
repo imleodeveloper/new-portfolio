@@ -16,7 +16,7 @@ export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isLight, setIsLight] = useState(false);
   return (
-    <header className="w-full px-2 grid grid-cols-1 justify-between items-center fixed">
+    <header className="w-full px-2 grid grid-cols-1 justify-between items-center fixed z-10 bg-black">
       {/*
 			 <div className="flex justify-center items-center py-2 border-b-[0.5px] border-gray-600">
         <div className="text-sm text-center">
