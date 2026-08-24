@@ -1,0 +1,77 @@
+# Leonardo Vieira — Full-Stack Developer (Contexto Completo)
+
+## Identidade
+
+- **Nome:** Leonardo Vieira
+- **Portfólio:** https://leonardovieira.viercatech.com.br
+- **Cargo:** Desenvolvedor Full-Stack, Fundador & CEO da VierCa Tech
+- **Localização:** São Paulo, Brasil
+- **Email:** imleodeveloper@gmail.com
+- **WhatsApp:** +55 (11) 96738-1402
+- **GitHub:** https://github.com/Leonardo-Vieira-Dev
+- **LinkedIn:** https://linkedin.com/in/leonardovieiradev
+
+## Sobre
+
+Leonardo Vieira é desenvolvedor Full-Stack com mais de 4 anos de experiência em T.I, com trajetória que começou em suporte técnico e hardware e evoluiu para fundador de empresa de software. Atua com desenvolvimento web, mobile, sistemas SaaS, automações e integrações de API. É fundador e CEO da VierCa Tech e sócio da Group Orbis Digital.
+
+## Trajetória Profissional (mais recente primeiro)
+
+### Group Orbis Digital — Sócio & Desenvolvedor Full-Stack (2025 – Presente)
+Sócio e desenvolvedor responsável por sites, CRM, aplicativos web e mobile e todo o ecossistema digital da empresa. Desenvolve integrações com WhatsApp API, Telegram e automações diversas.
+
+### INFOLAB MARKETING — Sócio & Desenvolvedor Full-Stack (Jun 2025 – Jul 2026)
+Sócio e desenvolvedor focado em sistemas internos (CRM, área de membros), landing pages, automações, design digital e integrações com WhatsApp oficial, Baileys, Telegram (GramJS, Telethon).
+
+### VierCa Tech — Fundador & Full-Stack Developer (Jun 2024 – Presente)
+Fundou a VierCa Tech em junho de 2024. Empresa especializada em desenvolvimento de software, sites, sistemas web e aplicativos mobile (Android e iOS). Atua com deploy em VPS Linux/Nginx, SEO técnico e segurança de sistemas.
+
+### Allugga — Assistente → Analista de Suporte T.I Jr. (Set 2022 – Jun 2024)
+Iniciou como Assistente de Suporte de T.I (até fev/2023), sendo promovido a Analista Jr. Atuou com suporte presencial e remoto, linha de produção de notebooks (desmontagem, manutenção, troca de tela), líder do suporte remoto e da logística interna.
+
+### Strong Tech — Estagiário de T.I (Mai 2022 – Set 2022)
+Primeiro emprego na área. Montagem de desktops do zero (carcaça, placa-mãe, fonte, memória RAM), manutenção de hardware, suporte técnico presencial e gerenciamento de redes LAN/WLAN.
+
+## Stack Técnica
+
+**Linguagens:** TypeScript, JavaScript, PHP, SQL
+**Front-end:** Next.js, React, React Native, TailwindCSS, HTML5, CSS3
+**Back-end:** Node.js, PHP, APIs REST
+**Banco de dados:** MySQL, PostgreSQL, Supabase
+**DevOps:** Linux, Nginx, VPS, Git, GitHub, Vercel
+**APIs e Integrações:** WhatsApp Business API, Baileys, Telegram Bot API, GramJS, Telethon
+**Outras:** SEO técnico, segurança web, automações, webhooks
+
+## Serviços Oferecidos pela VierCa Tech
+
+1. **Landing Pages** — Alta conversão com Next.js, SEO otimizado, design moderno e carregamento rápido
+2. **Sistemas Web** — SaaS, CRM, ERP com autenticação, banco de dados relacional e painel admin completo
+3. **Sites Institucionais** — Presença digital profissional com foco em UX, acessibilidade e SEO orgânico
+4. **Chatbots com IA** — Atendimento automatizado 24/7, captura de leads, integração com LLMs
+5. **WhatsApp API** — Baileys (multi-sessão não oficial) e API Oficial do WhatsApp Business com envio massivo e CRM integrado
+6. **Telegram** — Bots com GramJS e Telethon, BotFather, disparos em massa e automações
+7. **Automações e Webhooks** — Fluxos entre sistemas, integrações de APIs e pipelines automatizados
+
+## Projetos em Produção
+
+### Agendo Aki (https://agendoaki.com)
+SaaS de agendamento para salões de beleza, clínicas e profissionais autônomos. Permite gestão de horários, clientes, serviços e notificações automáticas via WhatsApp.
+Stack: Next.js, TypeScript, TailwindCSS, PHP, MySQL, Baileys, WhatsApp API
+
+### Disparei Já (https://dispareija.com)
+SaaS de disparos massivos para WhatsApp e Telegram. Alta performance, multi-sessão, suporte a listas de transmissão e agendamento de mensagens.
+Stack: Next.js, TypeScript, TailwindCSS, Supabase, Vercel, GramJS, Telethon, WhatsApp API, Baileys
+
+### CRM Group Orbis (https://crm.grouporbis.com.br)
+CRM completo para gestão comercial: Kanban de leads, controle financeiro, gestão de clientes e processos internos.
+Stack: React (Vite), TypeScript, TailwindCSS, PHP, MySQL
+
+## Empresa
+
+**VierCa Tech** (https://viercatech.com.br)
+Empresa de desenvolvimento de software fundada por Leonardo Vieira em junho de 2024. Especializada em desenvolvimento web, mobile e sistemas digitais para empresas de diferentes segmentos.
+
+## Parceiros
+
+**Group Orbis Digital** (https://grouporbis.com.br)
+Empresa parceira onde Leonardo atua como sócio e desenvolvedor Full-Stack, responsável pelo desenvolvimento de toda a infraestrutura digital.

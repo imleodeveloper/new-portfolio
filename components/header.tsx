@@ -1,176 +1,145 @@
 "use client";
 import {
-  Brain,
-  Briefcase,
-  CircleUserRound,
-  Code,
-  Crown,
-  MessageCirclePlus,
-  PhoneCall,
+  Crown, Github, Linkedin, Sun, Moon
 } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState, useEffect } from "react";
+import gsap from "gsap";
+import { ThemeToggle } from "./ui/theme-toggle";
+import { WhatsAppButton } from "./ui/whatsapp-button";
+import { FakeCursor } from "./ui/fake-cursor";
+import { useWhatsAppModal } from "@/lib/hooks/use-whatsapp-modal";
+import { useTheme } from "@/lib/hooks/use-theme";
+import { WhatsAppIcon } from "./ui/whatsapp-icon";
 
 export function Header() {
+  const headerRef = useRef<HTMLElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isLight, setIsLight] = useState(false);
+  const { openModal } = useWhatsAppModal();
+  const { isDark, toggleTheme } = useTheme();
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const [headerHidden, setHeaderHidden] = useState(false);
+
+  useLayoutEffect(() => {
+    if (!headerRef.current) return;
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        ".header-animate",
+        { y: -20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" }
+      );
+    }, headerRef);
+    return () => ctx.revert();
+  }, []);
+
+  useEffect(() => {
+    const onHide = () => setHeaderHidden(true);
+    const onShow = () => setHeaderHidden(false);
+    window.addEventListener("start-about-transition", onHide);
+    window.addEventListener("career-ready", onShow);
+    return () => {
+      window.removeEventListener("start-about-transition", onHide);
+      window.removeEventListener("career-ready", onShow);
+    };
+  }, []);
+
   return (
-    <header className="w-full px-2 grid grid-cols-1 justify-between items-center fixed z-10 bg-black">
-      {/*
-			 <div className="flex justify-center items-center py-2 border-b-[0.5px] border-gray-600">
-        <div className="text-sm text-center">
-          <span className="uppercase font-bold">
-            Você está precisando de um site ou sistema?
-          </span>{" "}
-          Descubra como posso transformar sua ideia.{" "}
-          <a
-            href="https://wa.me/5511967381402"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="uppercase ml-2 py-1 px-2 bg-white rounded-xl font-extrabold cursor-pointer text-[#1e90ff] hover:bg-gray-400 hover:text-blue-800"
-          >
-            Entrar em contato agora
-          </a>
-        </div>
-      </div>
-						*/}
-      <nav className="flex justify-between items-center border-b border-gray-900">
-        <div className="grid grid-cols-[1fr_1fr_2fr] items-center">
+    <header
+      ref={headerRef}
+      className={`w-full grid grid-cols-1 justify-between items-center fixed z-[60] backdrop-blur-md bg-white/10 dark:bg-black/10 border-b border-white/20 dark:border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.1)] text-black dark:text-white transition-colors duration-300 transition-[transform,opacity] duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${headerHidden ? "-translate-y-full opacity-0 pointer-events-none" : "translate-y-0 opacity-100"}`}
+    >
+      <nav className="header-animate flex justify-between items-center h-16 transition-colors duration-300">
+        <div className="grid grid-cols-[1fr_2fr] items-center h-full">
           <div className="flex justify-center items-center p-4">
-            <span className="text-center italic uppercase font-extrabold text-lg/4">
+            <span className="text-center italic uppercase font-extrabold text-lg/4 text-gray-900 dark:text-white">
               Leonardo <br />
               Vieira
             </span>
           </div>
-          <a
-            href="https://wa.me/5511967381402"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex justify-center items-center p-4 text-base/4 bg-green-600 cursor-pointer hover:bg-green-300 "
-          >
-            <span className="text-center font-bold uppercase text-black">
-              Contatar <br />
-              Agora
-            </span>
-          </a>
           <div className="shadow-[inset_0_-3px_10px_rgba(212,175,55,0.4)] gap-2 flex justify-center px-6 items-center h-full">
-            <div className="w-full flex flex-col justify-center items-center gap-1 border-r border-[rgb(212,175,55)]">
+            <div className="w-full flex flex-col justify-center items-center gap-1">
               <Crown className="text-[rgb(212,175,55)]"></Crown>
               <span className="text-xs font-extrabold uppercase text-center">
-                3 Years EXP
-              </span>
-            </div>
-            <div className="flex justify-center items-center w-full">
-              <span className="text-center text-sm italic font-bold uppercase">
-                Front-End <br />
-                Developer
+                4 Years EXP
               </span>
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-[1fr_1fr_1fr_2fr_1fr] items-center relative">
+        <div className="flex items-center relative h-full">
           <a
             href="https://www.viercatech.com.br/"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex flex-col relative justify-center items-center overflow-hidden border-x border-gray-700 hover:bg-gray-900"
+            className="hidden lg:flex flex-col relative justify-center items-center overflow-hidden border-x border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-900 h-full px-4 transition-colors duration-300"
           >
-            <div className="h-16 w-16 relative">
-              <Image src="/vierca-tech-namewhite.webp" alt="" fill />
+            <div className="h-10 w-10 relative">
+              <Image src="/icon-vierca-svg.svg" alt="VierCa" fill className="object-contain" />
             </div>
           </a>
-          <a
-            href="https://wa.me/5511967381402"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="h-full flex flex-col relative justify-center items-center gap-1 text-black bg-green-600 hover:bg-green-300 cursor-pointer overflow-hidden border-r border-gray-700"
-          >
-            <MessageCirclePlus className="h-8 w-8"></MessageCirclePlus>
-            <span className="text-xs italic font-semibold">WhatsApp</span>
-          </a>
-          <div className="h-full flex flex-col flex justify-center items-center gap-1 overflow-hidden border-r border-gray-700">
-            <input type="checkbox" />
-            <span className="text-xs italic font-semibold">Light</span>
+          
+          <div className="hidden md:flex h-full">
+            <WhatsAppButton variant="icon-only" className="border-r border-gray-200 dark:border-gray-700 px-4 transition-colors duration-300" />
           </div>
-          <div className="h-full bg-gradient-to-r from-[#1e90ff] to-blue-800 cursor-pointer hover:brightness-[40%] flex justify-center items-center flex-col gap-1 overflow-hidden border-r border-gray-700">
-            <div className="relative h-8 w-8 flex justify-center items-center rounded-full overflow-hidden">
-              <Image src="/leo-foto.webp" alt="" fill />
+          
+          <div className="hidden sm:flex h-full">
+            <ThemeToggle />
+          </div>
+
+          <div ref={menuRef} className="relative h-full flex items-center">
+            <div 
+               className={`h-full px-6 bg-gradient-to-r from-[#1e90ff] to-blue-800 cursor-pointer hover:brightness-110 flex justify-center items-center flex-col gap-1 overflow-hidden border-x border-gray-200 dark:border-gray-700 relative transition-all duration-150 shadow-md ${menuOpen ? "scale-95 shadow-[inset_0_3px_10px_rgba(0,0,0,0.5)]" : "active:scale-95 active:shadow-[inset_0_3px_10px_rgba(0,0,0,0.5)]"}`}
+               onClick={() => setMenuOpen(!menuOpen)}
+            >
+              <FakeCursor />
+              <div className="relative h-8 w-8 flex justify-center items-center rounded-full overflow-hidden pointer-events-none">
+                <Image src="/leo-foto.webp" alt="" fill className="object-cover" />
+              </div>
+              <span className="text-xs font-bold text-black uppercase pointer-events-none">
+                Developer
+              </span>
             </div>
-            <span className="text-xs font-bold text-black uppercase">
-              Developer
-            </span>
-          </div>
-          <div
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="h-full w-full flex justify-center items-center gap-1.5 flex-col cursor-pointer hover:bg-[#353535]"
-          >
-            <div className="w-6 h-[2px] bg-white"></div>
-            <div className="w-6 h-[2px] bg-white"></div>
-            <div className="w-6 h-[2px] bg-white"></div>
-          </div>
-          <div
-            className={`absolute pt-6 overflow-y-auto top-full right-0 ${
-              menuOpen ? "w-49.5" : "w-16.5"
-            } h-screen bg-gray-900 flex flex-col justify-start items-center transition-all duration-300`}
-          >
-            <ul className="flex flex-col justify-start items-center gap-8">
-              <li className="flex flex-col justify-center items-center gap-1">
-                <Link
-                  href=""
-                  className="rounded-full overflow-hidden bg-gray-800 p-2 hover:bg-gray-500 text-white hover:text-[#1e90ff] transition-all duration-300"
-                >
-                  <CircleUserRound className="w-6 h-6"></CircleUserRound>
-                </Link>
-                <span className={`text-sm ${menuOpen ? "visible" : "hidden"}`}>
-                  Me conheça
-                </span>
-              </li>
-              <li className="flex flex-col justify-center items-center gap-1">
-                <Link
-                  href=""
-                  className="rounded-full overflow-hidden bg-gray-800 p-2 hover:bg-gray-500 text-white hover:text-[#1e90ff] transition-all duration-300"
-                >
-                  <Brain className="w-6 h-6"></Brain>
-                </Link>
-                <span className={`text-sm ${menuOpen ? "visible" : "hidden"}`}>
-                  Skills
-                </span>
-              </li>
-              <li className="flex flex-col justify-center items-center gap-1">
-                <Link
-                  href=""
-                  className="rounded-full overflow-hidden bg-gray-800 p-2 hover:bg-gray-500 text-white hover:text-[#1e90ff] transition-all duration-300"
-                >
-                  <Briefcase className="w-6 h-6"></Briefcase>
-                </Link>
-                <span className={`text-sm ${menuOpen ? "visible" : "hidden"}`}>
-                  Experiência
-                </span>
-              </li>
-              <li className="flex flex-col justify-center items-center gap-1">
-                <Link
-                  href=""
-                  className="rounded-full overflow-hidden bg-gray-800 p-2 hover:bg-gray-500 text-white hover:text-[#1e90ff] transition-all duration-300"
-                >
-                  <Code className="w-6 h-6"></Code>
-                </Link>
-                <span className={`text-sm ${menuOpen ? "visible" : "hidden"}`}>
-                  Projetos
-                </span>
-              </li>
-              <li className="flex flex-col justify-center items-center gap-1">
-                <Link
-                  href=""
-                  className="rounded-full overflow-hidden bg-gray-800 p-2 hover:bg-gray-500 text-white hover:text-[#1e90ff] transition-all duration-300"
-                >
-                  <PhoneCall className="w-6 h-6"></PhoneCall>
-                </Link>
-                <span className={`text-sm ${menuOpen ? "visible" : "hidden"}`}>
-                  Contato
-                </span>
-              </li>
-            </ul>
+
+            {/* Menu Dropdown */}
+            <div className={`absolute top-full right-0 w-64 bg-black/80 backdrop-blur-xl border border-gray-800 shadow-[0_10px_40px_rgba(30,144,255,0.1)] hover:shadow-[0_10px_40px_rgba(30,144,255,0.3)] rounded-bl-xl overflow-hidden transition-all duration-300 transform origin-top z-50 ${menuOpen ? "scale-y-100 opacity-100 translate-y-0" : "scale-y-0 opacity-0 -translate-y-4"}`}>
+              <div className="flex flex-col w-full">
+                <a href="https://github.com/Leonardo-Vieira-Dev" target="_blank" rel="noopener noreferrer" className="w-full h-14 flex items-center justify-start px-4 hover:bg-white/10 transition-colors border-b border-gray-800/50 gap-3">
+                  <Github className="w-5 h-5 text-gray-300" />
+                  <span className="font-semibold text-sm text-gray-200">GitHub</span>
+                </a>
+                <a href="https://www.linkedin.com/in/leonardovieiradev/" target="_blank" rel="noopener noreferrer" className="w-full h-14 flex items-center justify-start px-4 hover:bg-white/10 transition-colors border-b border-gray-800/50 gap-3">
+                  <Linkedin className="w-5 h-5 text-[#0A66C2]" />
+                  <span className="font-semibold text-sm text-gray-200">LinkedIn</span>
+                </a>
+                
+                <a href="https://www.viercatech.com.br/" target="_blank" rel="noopener noreferrer" className="lg:hidden w-full h-14 flex items-center justify-start px-4 hover:bg-white/10 transition-colors border-b border-gray-800/50 gap-3">
+                  <div className="w-5 h-5 relative">
+                    <Image src="/icon-vierca-svg.svg" alt="VierCa" fill className="object-contain" />
+                  </div>
+                  <span className="font-semibold text-sm text-gray-200">Minha Empresa</span>
+                </a>
+
+                <button onClick={openModal} className="md:hidden w-full h-14 flex items-center justify-start px-4 hover:bg-white/10 transition-colors border-b border-gray-800/50 gap-3">
+                  <WhatsAppIcon className="w-5 h-5 text-green-500" />
+                  <span className="font-semibold text-sm text-gray-200">Contratar Serviços</span>
+                </button>
+                
+                <button onClick={toggleTheme} className="sm:hidden w-full h-14 flex items-center justify-start px-4 hover:bg-white/10 transition-colors gap-3">
+                  {!isDark ? <Sun className="w-5 h-5 text-yellow-500" /> : <Moon className="w-5 h-5 text-gray-300" />}
+                  <span className="font-semibold text-sm text-gray-200">Tema ({isDark ? 'Light' : 'Dark'})</span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </nav>

@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Protest_Strike, Roboto } from "next/font/google";
+import { ThemeProvider } from "@/lib/contexts/theme-context";
+import { WhatsAppModalProvider } from "@/lib/contexts/whatsapp-modal-context";
+import { BackgroundManager } from "../../components/ui/background-manager";
+import { FloatingNav } from "../../components/ui/floating-nav";
+import { FloatingWhatsApp } from "../../components/whatsapp/floating-whatsapp";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -12,9 +17,21 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const protestStrike = Protest_Strike({
+  variable: "--font-protest-strike",
+  subsets: ["latin"],
+  weight: "400",
+});
+
+const roboto = Roboto({
+  variable: "--font-roboto",
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+});
+
 export const metadata: Metadata = {
-  title: "Leonardo Vieira - Portfólio",
-  description: "Front-End Developer - Desenvolvimento de sites e sistemas",
+  title: "Leonardo Vieira - FullStack Developer",
+  description: "Portfólio de Leonardo Vieira, desenvolvedor Full-Stack especializado em aplicações web escaláveis e interativas.",
 };
 
 export default function RootLayout({
@@ -23,11 +40,41 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" className="dark" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var theme = localStorage.getItem('theme');
+                  var parsed = theme ? JSON.parse(theme) : null;
+                  if (parsed === 'light') {
+                    document.documentElement.classList.remove('dark');
+                  } else {
+                    document.documentElement.classList.add('dark');
+                  }
+                } catch(e) {
+                  document.documentElement.classList.add('dark');
+                }
+              })();
+            `,
+          }}
+        />
+      </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${protestStrike.variable} ${roboto.variable} antialiased relative`}
       >
-        {children}
+        <ThemeProvider>
+          <BackgroundManager />
+          <div className="relative z-[1]">
+            <WhatsAppModalProvider>
+              {children}
+              <FloatingNav />
+              <FloatingWhatsApp />
+            </WhatsAppModalProvider>
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   );

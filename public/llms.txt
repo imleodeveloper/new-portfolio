@@ -1,0 +1,40 @@
+# Leonardo Vieira — Full-Stack Developer
+
+> Portfólio pessoal de Leonardo Vieira, desenvolvedor Full-Stack brasileiro, fundador da VierCa Tech e sócio na Group Orbis Digital.
+
+## Sobre
+
+Leonardo Vieira é desenvolvedor Full-Stack com mais de 4 anos de experiência em T.I. Especializado em aplicações web escaláveis, sistemas SaaS, CRMs, landing pages de alta conversão e integrações com APIs de WhatsApp e Telegram.
+
+## Serviços
+
+- Landing Pages de alta conversão (Next.js + SEO)
+- Sistemas Web completos: SaaS, CRM, ERP
+- Sites Institucionais com foco em UX e SEO
+- Chatbots com IA para atendimento automatizado 24/7
+- Integração WhatsApp API (Baileys + Oficial)
+- Telegram: bots com GramJS e Telethon
+- Automações e Webhooks entre sistemas
+
+## Principais Projetos
+
+- [Agendo Aki](https://agendoaki.com) — SaaS de agendamento para salões e profissionais autônomos
+- [Disparei Já](https://dispareija.com) — SaaS de disparos massivos para WhatsApp e Telegram
+- [CRM Group Orbis](https://crm.grouporbis.com.br) — CRM completo com Kanban e gestão de leads
+
+## Stack Principal
+
+TypeScript, JavaScript, PHP, Next.js, React, Node.js, TailwindCSS, MySQL, PostgreSQL, Supabase, Git, Linux, Nginx, Vercel
+
+## Contato
+
+- Email: imleodeveloper@gmail.com
+- WhatsApp: +55 (11) 96738-1402
+- GitHub: https://github.com/Leonardo-Vieira-Dev
+- LinkedIn: https://linkedin.com/in/leonardovieiradev
+- VierCa Tech: https://viercatech.com.br
+- Group Orbis Digital: https://grouporbis.com.br
+
+## URL do Portfólio
+
+https://leonardovieira.viercatech.com.br
