@@ -84,7 +84,7 @@ export function Header() {
             className="hidden lg:flex flex-col relative justify-center items-center overflow-hidden border-x border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-900 h-full px-4 transition-colors duration-300"
           >
             <div className="h-10 w-10 relative">
-              <Image src="/icon-vierca-svg.svg" alt="VierCa" fill className="object-contain" />
+              <Image src={isDark ? "/icon-white.svg" : "/icon-vierca-svg.svg"} alt="VierCa" fill className="object-contain" />
             </div>
           </a>
           
@@ -124,7 +124,7 @@ export function Header() {
                 
                 <a href="https://www.viercatech.com.br/" target="_blank" rel="noopener noreferrer" className="lg:hidden w-full h-14 flex items-center justify-start px-4 hover:bg-white/10 transition-colors border-b border-gray-800/50 gap-3">
                   <div className="w-5 h-5 relative">
-                    <Image src="/icon-vierca-svg.svg" alt="VierCa" fill className="object-contain" />
+                    <Image src={isDark ? "/icon-white.svg" : "/icon-vierca-svg.svg"} alt="VierCa" fill className="object-contain" />
                   </div>
                   <span className="font-semibold text-sm text-gray-200">Minha Empresa</span>
                 </a>
