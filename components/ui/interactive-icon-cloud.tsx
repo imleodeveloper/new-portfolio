@@ -68,7 +68,6 @@ export function IconCloud({ iconSlugs }: DynamicCloudProps) {
   }, [data, isDark])
 
   return (
-    // @ts-ignore
     <Cloud {...cloudProps}>
       <>{renderedIcons}</>
     </Cloud>

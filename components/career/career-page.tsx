@@ -586,7 +586,7 @@ export function CareerPage() {
             <GsapAnim direction="fade-left" delay={0.2} className="flex flex-col gap-3 lg:sticky lg:top-28">
               <FakeIDE />
               <p className="text-[10px] text-gray-400 dark:text-gray-600 font-mono text-center tracking-wider">
-                // minha trajetória em código
+                {`// minha trajetória em código`}
               </p>
             </GsapAnim>
           </div>
