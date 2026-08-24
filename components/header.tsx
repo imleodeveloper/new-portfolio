@@ -124,7 +124,7 @@ export function Header() {
                 
                 <a href="https://www.viercatech.com.br/" target="_blank" rel="noopener noreferrer" className="lg:hidden w-full h-14 flex items-center justify-start px-4 hover:bg-white/10 transition-colors border-b border-gray-800/50 gap-3">
                   <div className="w-5 h-5 relative">
-                    <Image src={isDark ? "/icon-white.svg" : "/icon-vierca-svg.svg"} alt="VierCa" fill className="object-contain" />
+                    <Image src="/icon-white.svg" alt="VierCa" fill className="object-contain" />
                   </div>
                   <span className="font-semibold text-sm text-gray-200">Minha Empresa</span>
                 </a>
