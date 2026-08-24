@@ -26,15 +26,29 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     setMounted(true);
   }, []);
 
-  // Sync dark class on <html> whenever theme changes
+  // Sync dark class, html background and theme-color meta on every theme change
   useEffect(() => {
     if (!mounted) return;
     const root = document.documentElement;
-    if (theme === "dark") {
+    const isDarkNow = theme === "dark";
+
+    if (isDarkNow) {
       root.classList.add("dark");
+      root.style.backgroundColor = "#08081a";
     } else {
       root.classList.remove("dark");
+      root.style.backgroundColor = "#ffffff";
     }
+
+    const color = isDarkNow ? "#08081a" : "#ffffff";
+    let meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+    if (!meta) {
+      meta = document.createElement("meta");
+      meta.name = "theme-color";
+      document.head.appendChild(meta);
+    }
+    meta.content = color;
+
     setTheme(theme);
   }, [theme, mounted]);
 

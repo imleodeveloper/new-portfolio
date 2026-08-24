@@ -382,7 +382,7 @@ export function FakeIDE() {
               <span className="w-2.5 h-2.5 rounded-full bg-green-500/80" />
             </div>
             <span className="text-[10px] text-gray-500 ml-2 font-mono">
-              cursor-ai ~ leonardo-vieira.dev
+              leonardo-vieira.dev
             </span>
           </div>
           <span
