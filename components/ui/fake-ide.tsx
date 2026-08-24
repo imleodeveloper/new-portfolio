@@ -386,7 +386,7 @@ export function FakeIDE() {
             </span>
           </div>
           <span
-            className={`text-[10px] font-mono transition-colors duration-500 ${
+            className={`text-[10px] font-mono transition-colors duration-500 truncate max-w-[120px] sm:max-w-none ${
               stage === "thinking"
                 ? "text-blue-400 status-pulse"
                 : stage === "hello" || stage === "experience" || stage === "projects_code"
@@ -475,10 +475,10 @@ export function FakeIDE() {
 
               {/* Sim/Nao buttons - Terminal style */}
               {showSimOption && (
-                <div className="flex gap-2 mt-1 pointer-events-auto relative z-20">
+                <div className="flex flex-wrap gap-2 mt-1 pointer-events-auto relative z-20">
                   <button
                     onClick={() => startExperienceSequence(allLines)}
-                    className={`text-[11px] px-3 py-1 rounded border font-mono transition-all duration-200 cursor-pointer ${
+                    className={`text-[10px] sm:text-[11px] px-2 sm:px-3 py-1 rounded border font-mono transition-all duration-200 cursor-pointer whitespace-nowrap ${
                       simHighlighted
                         ? "bg-green-600 border-green-400 text-black shadow-[0_0_10px_rgba(34,197,94,0.4)] scale-105"
                         : "bg-gray-800 border-gray-600 text-green-400 hover:bg-green-900/40 hover:border-green-400"
@@ -488,7 +488,7 @@ export function FakeIDE() {
                   </button>
                   <button
                     onClick={() => skipToCta(allLines)}
-                    className={`text-[11px] px-3 py-1 rounded border font-mono transition-all duration-200 cursor-pointer ${
+                    className={`text-[10px] sm:text-[11px] px-2 sm:px-3 py-1 rounded border font-mono transition-all duration-200 cursor-pointer whitespace-nowrap ${
                       simHighlighted
                         ? "bg-gray-800/30 border-gray-700 text-gray-600"
                         : "bg-gray-800 border-gray-600 text-red-400 hover:bg-red-900/40 hover:border-red-400"

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Protest_Strike, Roboto } from "next/font/google";
 import { ThemeProvider } from "@/lib/contexts/theme-context";
 import { WhatsAppModalProvider } from "@/lib/contexts/whatsapp-modal-context";
@@ -28,6 +28,13 @@ const roboto = Roboto({
   subsets: ["latin"],
   weight: ["400", "500", "700"],
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
 
 export const metadata: Metadata = {
   title: "Leonardo Vieira - FullStack Developer",
@@ -63,7 +70,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${protestStrike.variable} ${roboto.variable} antialiased relative`}
+        className={`${geistSans.variable} ${geistMono.variable} ${protestStrike.variable} ${roboto.variable} antialiased relative overflow-x-hidden`}
       >
         <ThemeProvider>
           <BackgroundManager />
