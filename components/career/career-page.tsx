@@ -464,8 +464,6 @@ export function CareerPage() {
   const [selectedSite, setSelectedSite]       = useState<SiteProject | null>(null);
   const [sitePage, setSitePage]               = useState(0);
   const [slideDir, setSlideDir]               = useState<"next" | "prev">("next");
-  const [hoveredService, setHoveredService]   = useState<typeof SERVICES[0] | null>(null);
-  const [mousePos, setMousePos]               = useState({ x: 0, y: 0 });
   const { openModal } = useWhatsAppModal();
 
   const CARDS_PER_PAGE = 6;
@@ -479,8 +477,6 @@ export function CareerPage() {
     setSlideDir(dir);
     setSitePage(p => dir === "next" ? Math.min(p + 1, sitePages.length - 1) : Math.max(p - 1, 0));
   };
-
-  const HoveredIcon = hoveredService?.Icon ?? null;
 
   return (
     <div className="career-page">
@@ -826,154 +822,119 @@ export function CareerPage() {
       </section>
 
       {/* ═══════════════════ SERVIÇOS ═══════════════════ */}
-      <section id="section-servicos" className="min-h-screen w-full pt-24 pb-28 flex flex-col justify-center">
+      <section id="section-servicos" className="min-h-screen w-full pt-24 pb-28">
+        <div className="px-6 md:px-12 max-w-[1920px] mx-auto w-full">
 
-        {/* Floating service card that follows the mouse */}
-        {hoveredService && (
-          <div
-            className="fixed z-50 pointer-events-none"
-            style={{ left: mousePos.x + 24, top: mousePos.y - 16 }}
-          >
-            <div
-              className="rounded-2xl p-4 w-64 shadow-2xl border backdrop-blur-xl"
-              style={{
-                background: "#191919",
-                borderColor: hoveredService.color + "40",
-              }}
-            >
-              {/* Header */}
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: hoveredService.color + "25" }}>
-                  {HoveredIcon && <HoveredIcon className="w-4 h-4" style={{ color: hoveredService.color }} />}
-                </div>
-                <span className="font-black text-sm text-white leading-tight">{hoveredService.label}</span>
+          {/* Header + CTAs sempre visíveis */}
+          <GsapAnim direction="fade-up">
+            <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-14">
+              <div>
+                <h2 className="text-gray-900 dark:text-white text-6xl md:text-8xl uppercase leading-none" style={{ fontFamily: "var(--font-protest-strike)" }}>
+                  Serviços
+                </h2>
+                <p className="text-gray-500 dark:text-gray-400 mt-3 text-base font-medium">
+                  O que posso construir para você
+                </p>
               </div>
-
-              {/* Details list */}
-              <ul className="flex flex-col gap-1.5">
-                {hoveredService.details.map((d) => (
-                  <li key={d} className="flex items-start gap-2 text-[11px] text-gray-300 leading-snug">
-                    <span className="mt-0.5 w-1 h-1 rounded-full flex-shrink-0 mt-1.5" style={{ backgroundColor: hoveredService.color }} />
-                    {d}
-                  </li>
-                ))}
-              </ul>
-
-              {/* Tags */}
-              <div className="flex flex-wrap gap-1 mt-3 pt-3 border-t" style={{ borderColor: hoveredService.color + "20" }}>
-                {hoveredService.tags.map(t => (
-                  <span key={t} className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: hoveredService.color + "20", color: hoveredService.color }}>
-                    {t}
-                  </span>
-                ))}
+              <div className="flex flex-col sm:flex-row gap-3 flex-shrink-0">
+                <button
+                  onClick={openModal}
+                  className="flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-black text-sm text-white bg-gradient-to-r from-[#1e90ff] to-blue-800 hover:brightness-110 transition-all duration-300 shadow-lg shadow-blue-500/20 whitespace-nowrap"
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  Solicitar orçamento
+                </button>
+                <a
+                  href="https://wa.me/5511967381402"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-black text-sm text-white bg-[#25D366] hover:brightness-110 transition-all duration-300 shadow-lg shadow-green-500/20 whitespace-nowrap"
+                >
+                  <WhatsAppIcon className="w-4 h-4" />
+                  Falar no WhatsApp
+                </a>
               </div>
             </div>
-          </div>
-        )}
-
-        <div className="px-6 md:px-12 max-w-[1920px] mx-auto w-full">
-          <GsapAnim direction="fade-up">
-            <h2 className="text-gray-900 dark:text-white text-6xl md:text-8xl uppercase leading-none" style={{ fontFamily: "var(--font-protest-strike)" }}>
-              Serviços
-            </h2>
-            <p className="text-gray-500 dark:text-gray-400 mt-3 text-base font-medium">
-              O que posso construir para você
-            </p>
           </GsapAnim>
-        </div>
 
-        <div className="px-6 md:px-12 max-w-[1920px] mx-auto w-full mt-10 grid grid-cols-1 md:grid-cols-2 gap-px bg-gray-200/20 dark:bg-gray-800/30">
-          {SERVICES.map((service, i) => {
-            const { Icon, label, color, tags, desc } = service;
-            const isLeftCol = i % 2 === 0;
-            return (
-              <GsapAnim key={label} direction="fade-up" delay={i * 0.05}>
-                <div
-                  className={`group relative flex items-center gap-4 md:gap-6 py-7 transition-all duration-300 px-6 md:px-8 cursor-default h-full bg-white dark:bg-[#191919]`}
-                  style={{ background: hoveredService?.label === label ? color + "12" : undefined }}
-                  onMouseEnter={() => setHoveredService(service)}
-                  onMouseLeave={() => setHoveredService(null)}
-                  onMouseMove={(e) => setMousePos({ x: e.clientX, y: e.clientY })}
-                >
-                  {/* Number */}
-                  <span
-                    className="text-5xl md:text-6xl font-black leading-none select-none flex-shrink-0 w-12 md:w-16 text-right transition-colors duration-300"
-                    style={{ color: hoveredService?.label === label ? color + "55" : color + "20" }}
-                  >
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
+          {/* Grid de cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {SERVICES.map((service, i) => {
+              const { Icon, label, color, tags, desc, details } = service;
+              return (
+                <GsapAnim key={label} direction="fade-up" delay={i * 0.07}>
+                  <div className="group relative flex flex-col gap-5 p-6 rounded-2xl border border-gray-200 dark:border-white/[0.06] bg-white dark:bg-white/[0.03] hover:dark:bg-white/[0.06] hover:border-gray-300 dark:hover:border-white/10 transition-all duration-300 h-full overflow-hidden">
+                    {/* Top accent bar on hover */}
+                    <div className="absolute inset-x-0 top-0 h-0.5 rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ backgroundColor: color }} />
 
-                  {/* Vertical accent line */}
-                  <div
-                    className="w-0.5 self-stretch rounded-full flex-shrink-0 transition-opacity duration-300"
-                    style={{ backgroundColor: color, opacity: hoveredService?.label === label ? 1 : 0.3 }}
-                  />
+                    {/* Number + Icon */}
+                    <div className="flex items-center justify-between">
+                      <span className="text-4xl font-black leading-none select-none transition-colors duration-300" style={{ color: color + "28" }}>
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <div className="w-11 h-11 rounded-xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110" style={{ backgroundColor: color + "18" }}>
+                        <Icon className="w-5 h-5" style={{ color }} />
+                      </div>
+                    </div>
 
-                  {/* Icon */}
-                  <div
-                    className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:scale-110"
-                    style={{ backgroundColor: color + "18" }}
-                  >
-                    <Icon className="w-5 h-5" style={{ color }} />
-                  </div>
+                    {/* Title + Desc */}
+                    <div className="flex-1">
+                      <h3 className="font-black text-lg text-gray-900 dark:text-white leading-tight mb-2">{label}</h3>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">{desc}</p>
+                    </div>
 
-                  {/* Content */}
-                  <div className="flex-1 min-w-0">
-                    <p className="font-black text-lg md:text-xl text-gray-900 dark:text-white leading-tight">{label}</p>
-                    <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-1 leading-relaxed max-w-md">{desc}</p>
-                  </div>
+                    {/* Detail bullets */}
+                    <ul className="flex flex-col gap-1.5">
+                      {details.map(d => (
+                        <li key={d} className="flex items-start gap-2 text-xs text-gray-400 dark:text-gray-500 leading-snug">
+                          <span className="w-1 h-1 rounded-full flex-shrink-0 mt-1.5" style={{ backgroundColor: color }} />
+                          {d}
+                        </li>
+                      ))}
+                    </ul>
 
-                  {/* Tags + CTA */}
-                  <div className="hidden sm:flex flex-shrink-0 flex-col items-end gap-2.5">
-                    <div className="flex flex-wrap gap-1.5 justify-end">
+                    {/* Tags */}
+                    <div className="flex flex-wrap gap-1.5 pt-4 border-t border-gray-100 dark:border-white/5">
                       {tags.map(t => (
-                        <span
-                          key={t}
-                          className="text-[10px] font-bold px-2.5 py-0.5 rounded-full"
-                          style={{ backgroundColor: color + "15", color }}
-                        >
+                        <span key={t} className="text-[10px] font-bold px-2.5 py-0.5 rounded-full" style={{ backgroundColor: color + "15", color }}>
                           {t}
                         </span>
                       ))}
                     </div>
-                    <a
-                      href="https://wa.me/5511967381402"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[11px] font-black uppercase tracking-widest flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                      style={{ color }}
-                    >
-                      Solicitar →
-                    </a>
                   </div>
-                </div>
-              </GsapAnim>
-            );
-          })}
-        </div>
+                </GsapAnim>
+              );
+            })}
+          </div>
 
-        {/* CTA Final */}
-        <div className="px-6 md:px-12 max-w-[1920px] mx-auto w-full mt-10">
+          {/* CTA Banner inferior */}
           <GsapAnim direction="fade-up" delay={0.3}>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <button
-                onClick={openModal}
-                className="flex-1 flex items-center justify-center gap-3 py-4 rounded-xs font-black text-base text-white bg-gradient-to-r from-[#1e90ff] to-blue-800 hover:brightness-110 transition-all duration-300 shadow-lg shadow-blue-500/20"
-              >
-                <MessageCircle className="w-5 h-5" />
-                Solicitar orçamento
-              </button>
-              <a
-                href="https://wa.me/5511967381402"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 flex items-center justify-center gap-3 py-4 rounded-xs font-black text-base text-white bg-[#25D366] hover:brightness-110 transition-all duration-300 shadow-lg shadow-green-500/20"
-              >
-                <WhatsAppIcon className="w-5 h-5" />
-                Falar no WhatsApp
-              </a>
+            <div className="mt-10 rounded-2xl p-7 md:p-9 border border-[#1e90ff]/20 bg-gradient-to-r from-[#1e90ff]/5 via-transparent to-blue-800/5 flex flex-col md:flex-row items-center justify-between gap-6">
+              <div>
+                <p className="font-black text-xl text-gray-900 dark:text-white">Pronto para começar um projeto?</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Entre em contato e receba uma proposta personalizada.</p>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-3 flex-shrink-0 w-full md:w-auto">
+                <button
+                  onClick={openModal}
+                  className="flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-black text-sm text-white bg-gradient-to-r from-[#1e90ff] to-blue-800 hover:brightness-110 transition-all duration-300 shadow-lg shadow-blue-500/20 whitespace-nowrap"
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  Solicitar orçamento
+                </button>
+                <a
+                  href="https://wa.me/5511967381402"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-black text-sm text-white bg-[#25D366] hover:brightness-110 transition-all duration-300 shadow-lg shadow-green-500/20 whitespace-nowrap"
+                >
+                  <WhatsAppIcon className="w-4 h-4" />
+                  Falar no WhatsApp
+                </a>
+              </div>
             </div>
           </GsapAnim>
+
         </div>
       </section>
 
