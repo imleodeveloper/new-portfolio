@@ -164,7 +164,7 @@ export function HomePage() {
                       Minha trajetória começou na <strong className="text-blue-700 dark:text-white">Strong Tech</strong> (mai–set 2022) como Estagiário de T.I, montando desktops do zero. Depois fui para a <strong className="text-blue-700 dark:text-white">Allugga</strong> (set 2022 – jun 2024), onde virei Analista de Suporte T.I Jr., liderando suporte remoto e logística da empresa.
                     </p>
                     <p>
-                      Em junho de 2024, fundei a <strong className="text-blue-700 dark:text-white">VierCa Tech</strong>, minha empresa de desenvolvimento de software e aplicativos. Em 2025, me tornei sócio da <strong className="text-blue-700 dark:text-white">INFOLAB MARKETING</strong> (jun 2025 – jul 2026) e atualmente sou sócio e desenvolvedor da <strong className="text-blue-700 dark:text-white">Group Orbis Digital</strong>, onde construo sites, CRM, aplicativos e automações.
+                      Em junho de 2024, fundei a <strong className="text-blue-700 dark:text-white">VierCa</strong>, minha empresa de desenvolvimento de software e aplicativos — onde atuo até hoje. Em 2025, trabalhei como desenvolvedor na <strong className="text-blue-700 dark:text-white">INFOLAB MARKETING</strong> (jun 2025 – jul 2026), construindo CRMs, área de membros, landing pages e automações com WhatsApp e Telegram.
                     </p>
                   </div>
                 </>
