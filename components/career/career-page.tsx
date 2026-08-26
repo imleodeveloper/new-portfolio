@@ -310,57 +310,84 @@ const SITE_PROJECTS: SiteProject[] = [
 function CareerDetailModal({ entry, onClose }: { entry: typeof CAREER[0]; onClose: () => void }) {
   return (
     <div
-      className="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+      className="fixed inset-0 z-[999] flex items-end sm:items-center justify-center sm:p-4 bg-black/75 backdrop-blur-sm"
       onClick={onClose}
     >
       <div
-        className="w-full max-w-xl max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700"
+        className="w-full sm:max-w-lg max-h-[92vh] overflow-y-auto rounded-t-3xl sm:rounded-2xl shadow-2xl flex flex-col"
+        style={{ background: "#0d0d18", border: `1px solid ${entry.color}22` }}
         onClick={e => e.stopPropagation()}
       >
-        <div className="sticky top-0 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 px-6 pt-5 pb-4 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            {entry.logo ? (
-              <div className="w-12 h-12 rounded-xl overflow-hidden relative bg-gray-100 dark:bg-gray-800 flex-shrink-0 border border-gray-200 dark:border-gray-700">
-                <Image src={entry.logo} alt={entry.company} fill className="object-contain p-1.5" />
+        {/* Barra colorida no topo */}
+        <div className="h-1 w-full rounded-t-3xl sm:rounded-t-2xl flex-shrink-0" style={{ background: `linear-gradient(90deg, ${entry.color}, ${entry.color}55)` }} />
+
+        {/* Header */}
+        <div className="px-6 pt-5 pb-5 flex items-start justify-between gap-4 border-b flex-shrink-0" style={{ borderColor: entry.color + "18" }}>
+          <div className="flex items-center gap-4">
+            {/* Logo */}
+            <div
+              className="w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden relative"
+              style={{ backgroundColor: entry.color + "18", border: `1px solid ${entry.color}30` }}
+            >
+              {entry.logo
+                ? <Image src={entry.logo} alt={entry.company} fill className="object-contain p-2" />
+                : <Building2 className="w-6 h-6" style={{ color: entry.color }} />
+              }
+            </div>
+            {/* Info */}
+            <div className="min-w-0">
+              <p className="font-black text-lg text-white leading-tight">{entry.company}</p>
+              <p className="text-sm font-semibold mt-0.5" style={{ color: entry.color }}>{entry.role}</p>
+              <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                <span className="flex items-center gap-1 text-xs text-gray-400">
+                  <Calendar className="w-3 h-3" />{entry.period}
+                </span>
+                <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: entry.color + "20", color: entry.color }}>
+                  {entry.duration}
+                </span>
               </div>
-            ) : (
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: entry.color + "20" }}>
-                <Building2 className="w-5 h-5" style={{ color: entry.color }} />
-              </div>
-            )}
-            <div>
-              <p className="font-bold text-gray-900 dark:text-white">{entry.company}</p>
-              <p className="text-sm font-medium" style={{ color: entry.color }}>{entry.role}</p>
-              <p className="text-xs text-gray-400 flex items-center gap-1 mt-0.5">
-                <Calendar className="w-3 h-3" />{entry.period}
-              </p>
             </div>
           </div>
-          <button onClick={onClose} className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer flex-shrink-0">
+          <button
+            onClick={onClose}
+            className="p-2 rounded-lg transition-colors cursor-pointer flex-shrink-0 mt-0.5"
+            style={{ background: "#ffffff0a" }}
+          >
             <X className="w-4 h-4 text-gray-400" />
           </button>
         </div>
-        <div className="p-6 flex flex-col gap-5">
-          <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{entry.description}</p>
+
+        {/* Body */}
+        <div className="p-6 flex flex-col gap-6">
+          {/* Descrição */}
+          <p className="text-sm text-gray-300 leading-relaxed">{entry.description}</p>
+
+          {/* Responsabilidades */}
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-3">Responsabilidades</p>
-            <ul className="flex flex-col gap-2">
+            <p className="text-[10px] font-black uppercase tracking-[0.15em] mb-3" style={{ color: entry.color + "aa" }}>Responsabilidades</p>
+            <ul className="flex flex-col gap-2.5">
               {entry.details.map((d, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
-                  <ChevronRight className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: entry.color }} />
+                <li key={i} className="flex items-start gap-3 text-sm text-gray-300 leading-snug">
+                  <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 mt-1.5" style={{ backgroundColor: entry.color }} />
                   {d}
                 </li>
               ))}
             </ul>
           </div>
+
+          {/* Stack */}
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-3">Stack</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.15em] mb-3" style={{ color: entry.color + "aa" }}>Stack</p>
             <div className="flex flex-wrap gap-2">
-              {entry.skills.map(s => (
-                <span key={s} className="text-xs font-semibold px-3 py-1 rounded-full" style={{ backgroundColor: entry.color + "20", color: entry.color }}>
-                  {s}
-                </span>
-              ))}
+              {entry.skills.map(s => {
+                const icon = SKILL_ICONS[s];
+                return (
+                  <span key={s} className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg" style={{ backgroundColor: entry.color + "15", color: entry.color, border: `1px solid ${entry.color}25` }}>
+                    {icon && <Image src={icon} alt={s} width={12} height={12} className="object-contain opacity-90" />}
+                    {s}
+                  </span>
+                );
+              })}
             </div>
           </div>
         </div>
