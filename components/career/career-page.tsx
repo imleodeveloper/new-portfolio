@@ -157,13 +157,13 @@ const SISTEMAS: ProjectData[] = [
     logo: "/icon-disparei-ja.webp",
   },
   {
-    id: "crm-orbis",
-    name: "CRM Group Orbis",
-    description: "CRM com kanban, gestão de leads, financeiro e processos comerciais.",
-    detailedDescription: "Em desenvolvimento ativo. Focado em gestão e fluxos internos de vendas.",
+    id: "viercrm",
+    name: "VierCRM",
+    description: "CRM completo com kanban, gestão de leads, financeiro e processos comerciais.",
+    detailedDescription: "Em desenvolvimento ativo. Sistema de CRM da VierCa com kanban, gestão de leads e controle financeiro.",
     stacks: ["React (Vite)", "TypeScript", "TailwindCSS", "PHP", "MySQL"],
-    url: "crm.grouporbis.com.br",
-    logo: "/crm-orbis.webp",
+    url: "vierca.com",
+    logo: "/icon-vierca-svg.svg",
     inDevelopment: true,
   },
 ];
@@ -208,16 +208,15 @@ const SERVICES = [
 
 const SITE_PROJECTS: SiteProject[] = [
   {
-    id: "vierca-tech",
-    name: "VierCa Tech",
+    id: "vierca",
+    name: "VierCa",
     initial: "V",
     color: "#1e90ff",
-    logo: "/ViercaTech-Sfundo.png",
-    description: "Site institucional da VierCa Tech com portfólio de serviços e soluções digitais.",
-    longDescription: "Site completo da VierCa Tech apresentando serviços, portfólio e contato. Next.js no front-end, PHP no back-end e MySQL para persistência de dados.",
-    stacks: ["Next.js", "PHP", "MySQL", "TailwindCSS"],
-    url: "viercatech.com.br",
-    inDevelopment: true,
+    logo: "/icon-vierca-svg.svg",
+    description: "Site institucional da VierCa com portfólio de serviços e soluções digitais.",
+    longDescription: "Site da VierCa apresentando serviços, portfólio e contato. Next.js no front-end com TailwindCSS v4, SEO técnico e deploy otimizado.",
+    stacks: ["Next.js", "TailwindCSS v4", "TypeScript"],
+    url: "vierca.com",
   },
   {
     id: "meca-importacoes",
@@ -850,7 +849,7 @@ export function CareerPage() {
 
       {/* ═══════════════════ SERVIÇOS ═══════════════════ */}
       <section id="section-servicos" className="min-h-screen w-full pt-24 pb-28">
-        <div className="px-6 md:px-12 max-w-[1920px] mx-auto w-full">
+        <div className="px-6 md:px-12 max-w-[2240px] mx-auto w-full">
 
           {/* Header + CTAs sempre visíveis */}
           <GsapAnim direction="fade-up">
