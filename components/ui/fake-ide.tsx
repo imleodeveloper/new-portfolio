@@ -4,6 +4,7 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import { useWhatsAppModal } from "@/lib/hooks/use-whatsapp-modal";
 
 type IDEStage =
+  | "intro"
   | "hello"
   | "thinking"
   | "ask"
@@ -172,6 +173,8 @@ export function FakeIDE() {
   const [simHighlighted, setSimHighlighted] = useState(false);
   const [showCta, setShowCta] = useState(false);
   const [ctaVisible, setCtaVisible] = useState(false);
+  const [introText, setIntroText] = useState("");
+  const [introFading, setIntroFading] = useState(false);
   
   const codeAreaRef = useRef<HTMLDivElement>(null);
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
@@ -232,6 +235,8 @@ export function FakeIDE() {
     setSimHighlighted(false);
     setShowCta(false);
     setCtaVisible(false);
+    setIntroText("");
+    setIntroFading(false);
     if (codeAreaRef.current) codeAreaRef.current.scrollTop = 0;
   }, [clearTimers]);
 
@@ -301,40 +306,66 @@ export function FakeIDE() {
   // Full cycle orchestration
   useEffect(() => {
     reset();
-    setStage("hello");
+    setStage("intro");
 
-    startTyping(HELLO_LINES, 0, (typedHelloLines) => {
-      schedule(() => {
-        setStage("thinking");
-        setCurrentTypingLines([]);
-        setHistoryLines([...typedHelloLines, "", ""]);
+    const INTRO_WORD = "DEVELOPER";
+    let charIdx = 0;
 
-        const thinkingText = "🔍 Analisando perfil de Leonardo Vieira...";
-        let ci = 0;
-        const typeThinking = () => {
-          if (ci <= thinkingText.length) {
-            setChatMessage(thinkingText.slice(0, ci));
-            ci++;
-            if (codeAreaRef.current) {
-              codeAreaRef.current.scrollTop = codeAreaRef.current.scrollHeight;
-            }
-            schedule(typeThinking, 20); // faster thinking text
-          } else {
-            schedule(() => {
-              setStage("ask");
-              setChatMessage("Permitir ir para a próxima etapa?");
+    const typeIntroChar = () => {
+      if (charIdx <= INTRO_WORD.length) {
+        setIntroText(INTRO_WORD.slice(0, charIdx));
+        charIdx++;
+        const t = setTimeout(typeIntroChar, charIdx === 1 ? 200 : 110 + Math.random() * 60);
+        timersRef.current.push(t);
+      } else {
+        const t1 = setTimeout(() => {
+          setIntroFading(true);
+          const t2 = setTimeout(() => {
+            setStage("hello");
+            setIntroText("");
+            setIntroFading(false);
+
+            startTyping(HELLO_LINES, 0, (typedHelloLines) => {
               schedule(() => {
-                setShowSimOption(true);
-                if (codeAreaRef.current) {
-                  codeAreaRef.current.scrollTop = codeAreaRef.current.scrollHeight + 100;
-                }
-              }, 300);
-            }, 400);
-          }
-        };
-        typeThinking();
-      }, 200);
-    }, 5); // ultra fast
+                setStage("thinking");
+                setCurrentTypingLines([]);
+                setHistoryLines([...typedHelloLines, "", ""]);
+
+                const thinkingText = "🔍 Analisando perfil de Leonardo Vieira...";
+                let ci = 0;
+                const typeThinking = () => {
+                  if (ci <= thinkingText.length) {
+                    setChatMessage(thinkingText.slice(0, ci));
+                    ci++;
+                    if (codeAreaRef.current) {
+                      codeAreaRef.current.scrollTop = codeAreaRef.current.scrollHeight;
+                    }
+                    schedule(typeThinking, 20);
+                  } else {
+                    schedule(() => {
+                      setStage("ask");
+                      setChatMessage("Permitir ir para a próxima etapa?");
+                      schedule(() => {
+                        setShowSimOption(true);
+                        if (codeAreaRef.current) {
+                          codeAreaRef.current.scrollTop = codeAreaRef.current.scrollHeight + 100;
+                        }
+                      }, 300);
+                    }, 400);
+                  }
+                };
+                typeThinking();
+              }, 200);
+            }, 5);
+          }, 550);
+          timersRef.current.push(t2);
+        }, 700);
+        timersRef.current.push(t1);
+      }
+    };
+
+    const t0 = setTimeout(typeIntroChar, 300);
+    timersRef.current.push(t0);
 
     return () => {
       clearTimers();
@@ -397,8 +428,45 @@ export function FakeIDE() {
         {/* Main Area */}
         <div
           ref={codeAreaRef}
-          className="p-3 font-mono text-xs leading-relaxed overflow-y-auto h-[calc(100%-32px)] pb-10"
+          className="relative p-3 font-mono text-xs leading-relaxed overflow-y-auto h-[calc(100%-32px)] pb-10"
         >
+          {/* ---- INTRO ANIMATION ---- */}
+          {stage === "intro" && (
+            <div
+              className="absolute inset-0 flex items-center justify-center z-20 rounded-b-lg transition-opacity duration-500"
+              style={{
+                background: "rgba(10, 10, 18, 0.99)",
+                opacity: introFading ? 0 : 1,
+              }}
+            >
+              <div className="flex items-center">
+                <span
+                  style={{
+                    fontFamily: "'Pixelify Sans', monospace",
+                    fontSize: "clamp(1.6rem, 6vw, 2.8rem)",
+                    color: "#1e90ff",
+                    letterSpacing: "0.18em",
+                    textShadow: "0 0 24px rgba(30,144,255,0.7), 0 0 60px rgba(30,144,255,0.25)",
+                  }}
+                >
+                  {introText}
+                </span>
+                {!introFading && (
+                  <span
+                    className="ml-1 inline-block bg-[#1e90ff]"
+                    style={{
+                      width: "clamp(0.15rem, 0.5vw, 0.2rem)",
+                      height: "clamp(1.6rem, 6vw, 2.8rem)",
+                      opacity: 0.9,
+                      animation: "pulse 0.8s ease-in-out infinite",
+                      boxShadow: "0 0 10px rgba(30,144,255,0.8)",
+                    }}
+                  />
+                )}
+              </div>
+            </div>
+          )}
+
           {/* ---- ALL HISTORY AND CURRENT TYPING LINES ---- */}
           <div className="text-green-400/90 mb-2">
             {allLines.map((line, i) => (
