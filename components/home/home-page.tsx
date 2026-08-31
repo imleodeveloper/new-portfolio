@@ -28,13 +28,13 @@ const PROJECTS: Record<string, ProjectData> = {
     logo: "/icon-disparei-ja.webp",
   },
   crmorbis: {
-    id: "crm-orbis",
-    name: "CRM Group Orbis",
-    description: "CRM completo para empresas, com kanban, controle de leads, gestão financeira e organização de processos comerciais.",
-    detailedDescription: "O único que ainda está em desenvolvimento ativo. Totalmente focado em gestão e fluxos internos de vendas com visualização ágil.",
+    id: "viercrm",
+    name: "VierCRM",
+    description: "CRM completo com kanban, controle de leads, gestão financeira e organização de processos comerciais.",
+    detailedDescription: "Em desenvolvimento ativo. CRM da VierCa com kanban, gestão de leads e controle financeiro para fluxos internos de vendas.",
     stacks: ["React (Vite)", "TypeScript", "TailwindCSS", "PHP", "MySQL"],
-    url: "crm.grouporbis.com.br",
-    logo: "/crm-orbis.webp",
+    url: "vierca.com",
+    logo: "/icon-vierca-svg.svg",
     inDevelopment: true,
   }
 };
@@ -213,15 +213,15 @@ export function HomePage() {
                           </div>
                         </div>
                       </div>
-                      {/* CRM Group Orbis */}
+                      {/* VierCRM */}
                       <div className="flex flex-col justify-center items-center gap-2 border border-gray-200 dark:border-gray-800 pb-1 rounded-xs hover:border-[#1e90ff]/50 dark:hover:border-[#1e90ff]/50 transition-colors">
                         <div className="bg-gray-100 dark:bg-gray-800 rounded-xs w-full h-36 relative flex justify-center items-center overflow-hidden p-4">
-                          <Image src="/crm-orbis.webp" alt="CRM Group Orbis" fill className="object-contain p-6 opacity-80 group-hover:opacity-100 transition-opacity drop-shadow-md" />
+                          <Image src="/icon-vierca-svg.svg" alt="VierCRM" fill className="object-contain p-6 opacity-80 group-hover:opacity-100 transition-opacity drop-shadow-md" />
                         </div>
                         <div className="w-full flex flex-col gap-1 px-2">
-                          <span className="font-bold text-sm text-gray-900 dark:text-white">CRM Group Orbis</span>
+                          <span className="font-bold text-sm text-gray-900 dark:text-white">VierCRM</span>
                           <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2">
-                            CRM completo para empresas, com kanban, controle de leads, gestão financeira e organização de processos comerciais.
+                            CRM completo com kanban, controle de leads, gestão financeira e organização de processos comerciais.
                           </p>
                           <div className="w-full flex justify-between items-center mt-1">
                             <button
@@ -235,7 +235,10 @@ export function HomePage() {
                       </div>
                     </div>
                     <div className="w-full flex justify-center items-center">
-                      <button className="w-full bg-blue-600 font-semibold p-2 text-center rounded-xs cursor-pointer hover:bg-blue-700 text-white transition-colors">
+                      <button
+                        onClick={() => window.dispatchEvent(new CustomEvent("start-about-transition"))}
+                        className="w-full bg-blue-600 font-semibold p-2 text-center rounded-xs cursor-pointer hover:bg-blue-700 text-white transition-colors"
+                      >
                         Mais Projetos
                       </button>
                     </div>
