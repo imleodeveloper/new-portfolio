@@ -443,23 +443,23 @@ export function FakeIDE() {
                 <span
                   style={{
                     fontFamily: "'Pixelify Sans', monospace",
-                    fontSize: "clamp(1.6rem, 6vw, 2.8rem)",
-                    color: "#1e90ff",
+                    fontSize: "clamp(2.4rem, 10vw, 4.5rem)",
+                    color: "#ffffff",
                     letterSpacing: "0.18em",
-                    textShadow: "0 0 24px rgba(30,144,255,0.7), 0 0 60px rgba(30,144,255,0.25)",
+                    textShadow: "0 0 24px rgba(255,255,255,0.5), 0 0 60px rgba(255,255,255,0.15)",
                   }}
                 >
                   {introText}
                 </span>
                 {!introFading && (
                   <span
-                    className="ml-1 inline-block bg-[#1e90ff]"
+                    className="ml-1 inline-block bg-white"
                     style={{
-                      width: "clamp(0.15rem, 0.5vw, 0.2rem)",
-                      height: "clamp(1.6rem, 6vw, 2.8rem)",
+                      width: "3px",
+                      height: "clamp(2.4rem, 10vw, 4.5rem)",
                       opacity: 0.9,
                       animation: "pulse 0.8s ease-in-out infinite",
-                      boxShadow: "0 0 10px rgba(30,144,255,0.8)",
+                      boxShadow: "0 0 10px rgba(255,255,255,0.8)",
                     }}
                   />
                 )}
