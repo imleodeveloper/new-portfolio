@@ -248,7 +248,7 @@ export function ContactForm({ onClose }: { onClose: () => void }) {
 
         {/* WhatsApp button */}
         <a
-          href={`https://wa.me/5511999999999?text=${encodeURIComponent(`Olá! Acabei de enviar meu briefing pelo site. Meu nome é ${submittedLead.nome}.`)}`}
+          href={`https://wa.me/5511967381402?text=${encodeURIComponent(`Olá! Acabei de enviar meu briefing pelo site. Meu nome é ${submittedLead.nome}.`)}`}
           target="_blank"
           rel="noopener noreferrer"
           className="w-full flex items-center justify-center gap-2 py-3 rounded-lg bg-[#25D366] text-white font-bold text-sm uppercase hover:bg-[#1ebe5a] transition-colors shadow-lg shadow-green-500/20"
