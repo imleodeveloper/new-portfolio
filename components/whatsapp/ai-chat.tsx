@@ -16,14 +16,18 @@ type ConversationStage =
   | "greeting"
   | "askName"
   | "askPhone"
-  | "askCompany"
+  | "askCompany"        // tem empresa? sim/não
+  | "askCompanyName"    // qual o nome da empresa?
+  | "askCompanyServices"// quais serviços presta?
   | "askService"
   | "askPreference"
   | "collectInfo"
   | "finalize";
 
+// Ordem base — empresa pode ser pulada (ver getNextStage)
 const STAGE_ORDER: ConversationStage[] = [
-  "greeting", "askName", "askPhone", "askCompany",
+  "greeting", "askName", "askPhone",
+  "askCompany", "askCompanyName", "askCompanyServices",
   "askService", "askPreference", "collectInfo", "finalize",
 ];
 
@@ -34,15 +38,13 @@ const QUICK_REPLIES: Partial<Record<ConversationStage, string[]>> = {
   askPreference: ["WhatsApp", "Ligação Telefônica", "Ambos"],
 };
 
-const AI_COMPANY_Q = [
-  "Você representa uma empresa? Se sim, qual o nome e o que ela faz?",
-  "Tem empresa? Me conta o nome e o segmento que ela atua!",
-  "É pra pessoa física ou tem empresa? Se tiver, qual o nome e ramo?",
-];
+const AI_MSGS: Partial<Record<ConversationStage, string[]>> = {
+  askCompany:         ["Você representa uma empresa?", "Tem empresa? Me conta!", "É para pessoa física ou empresa?"],
+  askCompanyName:     ["Qual o nome da empresa?", "Me diz o nome da sua empresa!", "Como se chama a empresa?"],
+  askCompanyServices: ["E quais serviços ou produtos a empresa oferece?", "O que a empresa faz? Conta um pouco sobre o negócio!", "Quais são os serviços/produtos da empresa?"],
+};
 
-function pickRandom(arr: string[]): string {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
+function pickRandom(arr: string[]): string { return arr[Math.floor(Math.random() * arr.length)]; }
 function delay(ms: number) { return new Promise<void>((r) => setTimeout(r, ms)); }
 let _uid = 0;
 function nextId() { return `m${++_uid}`; }
@@ -61,13 +63,13 @@ function extractPhone(text: string): string {
 
 function detectService(text: string): ServiceType | null {
   const l = text.toLowerCase();
-  if (l.includes("landing"))                               return "landing-page";
-  if (l.includes("institucional"))                         return "institutional-site";
-  if (l.includes("sistema") || l.includes("próprio"))      return "custom-system";
-  if (l.includes("marketplace"))                           return "marketplace";
-  if (l.includes("freelance") || l.includes("freela"))     return "freelance";
+  if (l.includes("landing"))                            return "landing-page";
+  if (l.includes("institucional"))                      return "institutional-site";
+  if (l.includes("sistema") || l.includes("próprio"))   return "custom-system";
+  if (l.includes("marketplace"))                        return "marketplace";
+  if (l.includes("freelance") || l.includes("freela"))  return "freelance";
   if (l.includes("t.i") || l.includes("suporte") || l.includes("manutenção")) return "it-services";
-  if (l.includes("outro"))                                 return "other";
+  if (l.includes("outro"))                              return "other";
   return null;
 }
 
@@ -77,6 +79,11 @@ function detectPreference(text: string): Lead["contactPreference"] | null {
   if (l.includes("whatsapp"))                          return "whatsapp";
   if (l.includes("ambos") || l.includes("tanto faz")) return "both";
   return null;
+}
+
+function hasCompanyAnswer(text: string): boolean {
+  const l = text.toLowerCase();
+  return !(l.includes("não") || l.includes("nao") || l.includes("pessoa física") || l.includes("nenhuma"));
 }
 
 function getNextBriefingQuestion(collectedData: Partial<Lead>): { label: string; key: string } | null {
@@ -94,10 +101,10 @@ function allBriefingAnswered(collectedData: Partial<Lead>): boolean {
 }
 
 function getAIReply(stage: ConversationStage, collectedData: Partial<Lead>): string {
+  if (AI_MSGS[stage]) return pickRandom(AI_MSGS[stage]!);
   switch (stage) {
     case "askName":       return pickRandom(AI_TEMPLATES.askName);
     case "askPhone":      return pickRandom(AI_TEMPLATES.askPhone);
-    case "askCompany":    return pickRandom(AI_COMPANY_Q);
     case "askService":    return pickRandom(AI_TEMPLATES.askService);
     case "askPreference": return pickRandom(AI_TEMPLATES.askPreference);
     case "collectInfo": {
@@ -105,16 +112,10 @@ function getAIReply(stage: ConversationStage, collectedData: Partial<Lead>): str
       return q ? q.label : pickRandom(AI_TEMPLATES.collectInfo);
     }
     case "finalize":      return pickRandom(AI_TEMPLATES.finalize);
-    default:              return pickRandom(AI_TEMPLATES.collectInfo);
+    default:              return pickRandom(AI_TEMPLATES.greeting);
   }
 }
 
-/** Retorna true se deve ficar em collectInfo (ainda há perguntas abertas) */
-function shouldStayInCollectInfo(collectedData: Partial<Lead>): boolean {
-  return !allBriefingAnswered(collectedData);
-}
-
-/** Quick replies para collectInfo: Sim/Não para perguntas binárias, nada para abertas */
 function getCollectInfoReplies(collectedData: Partial<Lead>): string[] {
   const q = getNextBriefingQuestion(collectedData);
   if (!q) return [];
@@ -134,36 +135,27 @@ export function AIChat({ form, onPrefill }: AIChatProps) {
   const [stage, setStage]           = useState<ConversationStage>("greeting");
   const [serviceId, setServiceId]   = useState<ServiceType | null>(null);
 
-  // Refs que sempre têm o valor atual — evitam stale closure em qualquer callback
   const stageRef      = useRef<ConversationStage>("greeting");
   const isThinkingRef = useRef(false);
   const collected     = useRef<Partial<Lead>>({ briefingAnswers: {} });
-  const serviceIdRef  = useRef<ServiceType | null>(null);
+  const hasCompanyRef = useRef<boolean | null>(null); // null = ainda não respondeu
   const onPrefillRef  = useRef(onPrefill);
   const formRef       = useRef(form);
 
-  // Mantém refs sincronizados com props/state
   useEffect(() => { onPrefillRef.current = onPrefill; }, [onPrefill]);
   useEffect(() => { formRef.current = form; }, [form]);
 
   const chatEndRef = useRef<HTMLDivElement>(null);
   const inputRef   = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, isThinking]);
+  useEffect(() => { chatEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages, isThinking]);
+  useEffect(() => { if (!isThinking) inputRef.current?.focus(); }, [isThinking]);
 
-  useEffect(() => {
-    if (!isThinking) inputRef.current?.focus();
-  }, [isThinking]);
-
-  /** Acumula dado do usuário para o stage atual — usa stageRef (sempre atual) */
   const accumulate = useCallback((text: string, currentStage: ConversationStage) => {
     const t = text.trim();
-
     if (currentStage === "greeting" || currentStage === "askService") {
       const svc = detectService(t);
-      if (svc) { collected.current.serviceType = svc; serviceIdRef.current = svc; setServiceId(svc); }
+      if (svc) { collected.current.serviceType = svc; setServiceId(svc); }
     }
     if (currentStage === "askName") {
       const nome = extractName(t) || t;
@@ -174,13 +166,13 @@ export function AIChat({ form, onPrefill }: AIChatProps) {
       if (tel) collected.current.telefone = tel;
     }
     if (currentStage === "askCompany") {
-      const lower = t.toLowerCase();
-      if (!lower.includes("não") && !lower.includes("nao") && !lower.includes("pessoa física")) {
-        // Tenta extrair nome da empresa do texto
-        const match = t.match(/(?:chama[- ]se?|é a?|nome[: ]+|empresa[: ]+|sim[,. ]+)(.+)/i);
-        const companyName = (match ? match[1] : t).trim().slice(0, 120);
-        if (companyName) collected.current.companyName = companyName;
-      }
+      hasCompanyRef.current = hasCompanyAnswer(t);
+    }
+    if (currentStage === "askCompanyName") {
+      collected.current.companyName = t.slice(0, 120);
+    }
+    if (currentStage === "askCompanyServices") {
+      collected.current.companyServices = t.slice(0, 500);
     }
     if (currentStage === "askPreference") {
       const pref = detectPreference(t);
@@ -196,10 +188,24 @@ export function AIChat({ form, onPrefill }: AIChatProps) {
     }
   }, []);
 
-  /** Núcleo de envio — recebe texto diretamente, não depende de inputValue */
+  /** Decide o próximo stage — pula nome/serviços da empresa se usuário não tiver */
+  const getNextStage = useCallback((current: ConversationStage): ConversationStage => {
+    if (current === "collectInfo" && !allBriefingAnswered(collected.current)) {
+      return "collectInfo";
+    }
+    // Pula etapas de empresa se usuário disse que não tem
+    if (current === "askCompany" && hasCompanyRef.current === false) {
+      return "askService";
+    }
+    if (current === "askCompanyName" && hasCompanyRef.current === false) {
+      return "askService";
+    }
+    const idx = STAGE_ORDER.indexOf(current);
+    return idx < STAGE_ORDER.length - 1 ? STAGE_ORDER[idx + 1] : "finalize";
+  }, []);
+
   const sendText = useCallback(async (text: string) => {
     if (!text.trim() || isThinkingRef.current) return;
-
     isThinkingRef.current = true;
     setIsThinking(true);
 
@@ -212,17 +218,9 @@ export function AIChat({ form, onPrefill }: AIChatProps) {
 
     accumulate(text.trim(), currentStage);
 
-    await delay(1100 + Math.random() * 900);
+    await delay(1000 + Math.random() * 800);
 
-    let nextStage: ConversationStage;
-    if (currentStage === "collectInfo" && shouldStayInCollectInfo(collected.current)) {
-      // Ainda há perguntas de briefing — fica em collectInfo
-      nextStage = "collectInfo";
-    } else {
-      const idx = STAGE_ORDER.indexOf(currentStage);
-      nextStage = idx < STAGE_ORDER.length - 1 ? STAGE_ORDER[idx + 1] : "finalize";
-    }
-
+    const nextStage = getNextStage(currentStage);
     stageRef.current = nextStage;
     setStage(nextStage);
 
@@ -238,7 +236,7 @@ export function AIChat({ form, onPrefill }: AIChatProps) {
       await delay(700);
       onPrefillRef.current({ ...formRef.current, ...collected.current });
     }
-  }, [accumulate]);
+  }, [accumulate, getNextStage]);
 
   const handleSend = useCallback(() => {
     const text = inputValue.trim();
@@ -247,15 +245,12 @@ export function AIChat({ form, onPrefill }: AIChatProps) {
     void sendText(text);
   }, [inputValue, sendText]);
 
-  const handleQuickReply = useCallback((text: string) => {
-    void sendText(text);
-  }, [sendText]);
+  const handleQuickReply = useCallback((text: string) => { void sendText(text); }, [sendText]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend(); }
   }, [handleSend]);
 
-  // Quick replies dinâmicos para o stage atual
   const quickReplies: string[] = stage === "collectInfo"
     ? getCollectInfoReplies(collected.current)
     : (QUICK_REPLIES[stage] ?? []);
