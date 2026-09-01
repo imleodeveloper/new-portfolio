@@ -21,6 +21,7 @@ export interface ProjectData {
   url: string;
   logo: string;
   images?: string[];
+  mobileImages?: string[];
   inDevelopment?: boolean;
 }
 
@@ -46,9 +47,9 @@ export function ProjectModal({ isOpen, onClose, project }: ProjectModalProps) {
 
   if (!project) return null;
 
-  const slides = project.images && project.images.length > 0
-    ? project.images
-    : [project.logo];
+  const desktopSlides = project.images?.length ? project.images : [project.logo];
+  const mobileSlides  = project.mobileImages?.length ? project.mobileImages : desktopSlides;
+  const slides = aspectRatio === "9:16" ? mobileSlides : desktopSlides;
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} maxWidth="max-w-[95vw] 2xl:max-w-[85vw]">

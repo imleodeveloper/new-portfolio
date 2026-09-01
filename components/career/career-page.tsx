@@ -150,6 +150,8 @@ const SISTEMAS: ProjectData[] = [
     images: [
       "/projects/web-systems/agendoaki/hero-section-client.webp",
       "/projects/web-systems/agendoaki/appoint-panel.webp",
+    ],
+    mobileImages: [
       "/projects/web-systems/agendoaki/hero-section-client-mobile.webp",
       "/projects/web-systems/agendoaki/appoint-panel-mobile.webp",
     ],
@@ -165,6 +167,8 @@ const SISTEMAS: ProjectData[] = [
     images: [
       "/projects/web-systems/dispareija/hero-dispareija.webp",
       "/projects/web-systems/dispareija/dash-dispareija.webp",
+    ],
+    mobileImages: [
       "/projects/web-systems/dispareija/hero-dispareija-mobile.webp",
       "/projects/web-systems/dispareija/dash-dispareija-mobile.webp",
     ],
