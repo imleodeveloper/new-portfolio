@@ -33,18 +33,14 @@ function GitHubSVG({ className, style }: IconProps) {
 
 function VierCaLogo({ className }: IconProps) {
   return (
-    <img src="/ViercaTech-Sfundo.png" alt="VierCa Tech" className={className} style={{ objectFit: "contain" }} />
+    <img src="/icon-vierca-svg.svg" alt="VierCa" className={className} style={{ objectFit: "contain" }} />
   );
 }
 
-function OrbisLogo({ className, style }: IconProps) {
+function InstagramSVG({ className, style }: IconProps) {
   return (
-    <svg className={className} style={style} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.8"/>
-      <ellipse cx="12" cy="12" rx="4.5" ry="10" stroke="currentColor" strokeWidth="1.5"/>
-      <line x1="2" y1="12" x2="22" y2="12" stroke="currentColor" strokeWidth="1.5"/>
-      <line x1="4.5" y1="6" x2="19.5" y2="6" stroke="currentColor" strokeWidth="1.2"/>
-      <line x1="4.5" y1="18" x2="19.5" y2="18" stroke="currentColor" strokeWidth="1.2"/>
+    <svg className={className} style={style} viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
     </svg>
   );
 }
@@ -76,20 +72,20 @@ const CONTACT_CARDS: Record<string, ContactCardData> = {
   email:    { key: "email",    Icon: Mail,        label: "E-mail",              value: "imleodeveloper@gmail.com",           href: "mailto:imleodeveloper@gmail.com",            color: "#1e90ff" },
   phone:    { key: "phone",    Icon: Phone,       label: "Telefone",            value: "(11) 96738-1402",                    href: "tel:+5511967381402",                        color: "#10b981" },
   whatsapp: { key: "whatsapp", Icon: WhatsAppSVG, label: "WhatsApp",            value: "(11) 96738-1402",                    href: "https://wa.me/5511967381402",               color: "#25d366" },
-  github:   { key: "github",   Icon: GitHubSVG,   label: "GitHub",              value: "Leonardo-Vieira-Dev",                href: "https://github.com/Leonardo-Vieira-Dev",    color: "#6366f1" },
-  linkedin: { key: "linkedin", Icon: LinkedInSVG, label: "LinkedIn",            value: "leonardovieiradev",                  href: "https://linkedin.com/in/leonardovieiradev/", color: "#0a66c2" },
-  vierca:   { key: "vierca",   Icon: VierCaLogo,  label: "VierCa Tech",         value: "viercatech.com.br",                  href: "https://viercatech.com.br",                 color: "#f59e0b" },
-  orbis:    { key: "orbis",    Icon: OrbisLogo,   label: "Group Orbis Digital", value: "grouporbis.com.br",                  href: "https://grouporbis.com.br",                 color: "#8b5cf6" },
+  github:    { key: "github",    Icon: GitHubSVG,     label: "GitHub",    value: "imleodeveloper",                          href: "https://github.com/imleodeveloper/",                   color: "#6366f1" },
+  linkedin:  { key: "linkedin",  Icon: LinkedInSVG,   label: "LinkedIn",  value: "leonardovieiracarvalho-ti",               href: "https://linkedin.com/in/leonardovieiracarvalho-ti/",    color: "#0a66c2" },
+  vierca:    { key: "vierca",    Icon: VierCaLogo,    label: "VierCa",    value: "vierca.com",                              href: "https://vierca.com",                                    color: "#f59e0b" },
+  instagram: { key: "instagram", Icon: InstagramSVG,  label: "Instagram", value: "@vierca.digital",                        href: "https://instagram.com/vierca.digital",                  color: "#E1306C" },
 };
 
 const QUICK_REPLIES = [
   { label: "E-mail",      Icon: Mail,        message: "Qual é o seu e-mail de contato?",       cardKey: "email",    color: "#1e90ff" },
   { label: "Telefone",    Icon: Phone,       message: "Qual é o seu telefone?",                 cardKey: "phone",    color: "#10b981" },
   { label: "WhatsApp",    Icon: WhatsAppSVG, message: "Quero entrar em contato pelo WhatsApp",  cardKey: "whatsapp", color: "#25d366" },
-  { label: "GitHub",      Icon: GitHubSVG,   message: "Quero ver o seu perfil no GitHub",       cardKey: "github",   color: "#6366f1" },
-  { label: "LinkedIn",    Icon: LinkedInSVG, message: "Quero ver o seu LinkedIn",               cardKey: "linkedin", color: "#0a66c2" },
-  { label: "VierCa Tech", Icon: VierCaLogo,  message: "Quero conhecer a VierCa Tech",           cardKey: "vierca",   color: "#f59e0b" },
-  { label: "Group Orbis", Icon: OrbisLogo,   message: "Me conte sobre o Group Orbis Digital",   cardKey: "orbis",    color: "#8b5cf6" },
+  { label: "GitHub",    Icon: GitHubSVG,    message: "Quero ver o seu perfil no GitHub",  cardKey: "github",    color: "#6366f1" },
+  { label: "LinkedIn",  Icon: LinkedInSVG,  message: "Quero ver o seu LinkedIn",          cardKey: "linkedin",  color: "#0a66c2" },
+  { label: "VierCa",   Icon: VierCaLogo,   message: "Quero conhecer a VierCa",           cardKey: "vierca",    color: "#f59e0b" },
+  { label: "Instagram", Icon: InstagramSVG, message: "Quero ver o Instagram da VierCa",  cardKey: "instagram", color: "#E1306C" },
 ];
 
 const WELCOME: ChatMessage = {

@@ -33,7 +33,7 @@ const PROJECTS: Record<string, ProjectData> = {
     description: "CRM completo com kanban, controle de leads, gestão financeira e organização de processos comerciais.",
     detailedDescription: "Em desenvolvimento ativo. CRM da VierCa com kanban, gestão de leads e controle financeiro para fluxos internos de vendas.",
     stacks: ["React (Vite)", "TypeScript", "TailwindCSS", "PHP", "MySQL"],
-    url: "vierca.com",
+    url: "crm.vierca.com",
     logo: "/icon-vierca-svg.svg",
     inDevelopment: true,
   }

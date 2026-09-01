@@ -38,16 +38,16 @@ const SYSTEM_PROMPT = `Você é o assistente virtual de Leonardo Vieira, desenvo
 ━━━ PROJETOS DESENVOLVIDOS ━━━
 • Agendo Aki: SaaS de agendamentos para salões, clínicas e profissionais autônomos — agendoaki.com
 • Disparei Já: SaaS de disparos massivos para WhatsApp e Telegram — dispareija.com
-• CRM Group Orbis: sistema CRM completo com Kanban, gestão de leads e controle financeiro — crm.grouporbis.com.br
-• VierCa Tech: site institucional da empresa — viercatech.com.br
+• VierCRM: sistema CRM completo com Kanban, gestão de leads e controle financeiro — crm.vierca.com
+• VierCa: site institucional da empresa — vierca.com
 
 ━━━ CONTATO DE LEONARDO ━━━
 • Email: imleodeveloper@gmail.com
 • WhatsApp: (11) 96738-1402
-• GitHub: github.com/Leonardo-Vieira-Dev
-• LinkedIn: linkedin.com/in/leonardovieiradev
-• VierCa Tech: viercatech.com.br
-• Group Orbis Digital: grouporbis.com.br
+• GitHub: github.com/imleodeveloper
+• LinkedIn: linkedin.com/in/leonardovieiracarvalho-ti
+• Instagram: @vierca.digital
+• VierCa: vierca.com
 
 Quando o visitante perguntar sobre formas de contato, incentive-o a usar os botões de atalho disponíveis no chat. Quando demonstrar interesse em contratar, seja entusiasmado e direcione para o WhatsApp como canal mais rápido.`;
 

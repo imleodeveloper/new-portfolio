@@ -162,7 +162,7 @@ const SISTEMAS: ProjectData[] = [
     description: "CRM completo com kanban, gestão de leads, financeiro e processos comerciais.",
     detailedDescription: "Em desenvolvimento ativo. Sistema de CRM da VierCa com kanban, gestão de leads e controle financeiro.",
     stacks: ["React (Vite)", "TypeScript", "TailwindCSS", "PHP", "MySQL"],
-    url: "vierca.com",
+    url: "crm.vierca.com",
     logo: "/icon-vierca-svg.svg",
     inDevelopment: true,
   },

@@ -1,6 +1,6 @@
 "use client";
 import {
-  Crown, Github, Linkedin, Sun, Moon
+  Crown, Github, Linkedin, Sun, Moon, Instagram
 } from "lucide-react";
 import Image from "next/image";
 import { useLayoutEffect, useRef, useState, useEffect } from "react";
@@ -78,7 +78,7 @@ export function Header() {
         </div>
         <div className="flex items-center relative h-full">
           <a
-            href="https://www.viercatech.com.br/"
+            href="https://vierca.com"
             target="_blank"
             rel="noopener noreferrer"
             className="hidden lg:flex flex-col relative justify-center items-center overflow-hidden border-x border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-900 h-full px-4 transition-colors duration-300"
@@ -113,16 +113,20 @@ export function Header() {
             {/* Menu Dropdown */}
             <div className={`absolute top-full right-0 w-64 bg-black/80 backdrop-blur-xl border border-gray-800 shadow-[0_10px_40px_rgba(30,144,255,0.1)] hover:shadow-[0_10px_40px_rgba(30,144,255,0.3)] rounded-bl-xl overflow-hidden transition-all duration-300 transform origin-top z-50 ${menuOpen ? "scale-y-100 opacity-100 translate-y-0" : "scale-y-0 opacity-0 -translate-y-4"}`}>
               <div className="flex flex-col w-full">
-                <a href="https://github.com/Leonardo-Vieira-Dev" target="_blank" rel="noopener noreferrer" className="w-full h-14 flex items-center justify-start px-4 hover:bg-white/10 transition-colors border-b border-gray-800/50 gap-3">
+                <a href="https://github.com/imleodeveloper/" target="_blank" rel="noopener noreferrer" className="w-full h-14 flex items-center justify-start px-4 hover:bg-white/10 transition-colors border-b border-gray-800/50 gap-3">
                   <Github className="w-5 h-5 text-gray-300" />
                   <span className="font-semibold text-sm text-gray-200">GitHub</span>
                 </a>
-                <a href="https://www.linkedin.com/in/leonardovieiradev/" target="_blank" rel="noopener noreferrer" className="w-full h-14 flex items-center justify-start px-4 hover:bg-white/10 transition-colors border-b border-gray-800/50 gap-3">
+                <a href="https://www.linkedin.com/in/leonardovieiracarvalho-ti/" target="_blank" rel="noopener noreferrer" className="w-full h-14 flex items-center justify-start px-4 hover:bg-white/10 transition-colors border-b border-gray-800/50 gap-3">
                   <Linkedin className="w-5 h-5 text-[#0A66C2]" />
                   <span className="font-semibold text-sm text-gray-200">LinkedIn</span>
                 </a>
+                <a href="https://instagram.com/vierca.digital" target="_blank" rel="noopener noreferrer" className="w-full h-14 flex items-center justify-start px-4 hover:bg-white/10 transition-colors border-b border-gray-800/50 gap-3">
+                  <Instagram className="w-5 h-5 text-[#E1306C]" />
+                  <span className="font-semibold text-sm text-gray-200">Instagram</span>
+                </a>
                 
-                <a href="https://www.viercatech.com.br/" target="_blank" rel="noopener noreferrer" className="lg:hidden w-full h-14 flex items-center justify-start px-4 hover:bg-white/10 transition-colors border-b border-gray-800/50 gap-3">
+                <a href="https://vierca.com" target="_blank" rel="noopener noreferrer" className="lg:hidden w-full h-14 flex items-center justify-start px-4 hover:bg-white/10 transition-colors border-b border-gray-800/50 gap-3">
                   <div className="w-5 h-5 relative">
                     <Image src="/icon-white.svg" alt="VierCa" fill className="object-contain" />
                   </div>
