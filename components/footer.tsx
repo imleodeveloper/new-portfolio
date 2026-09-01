@@ -1,6 +1,6 @@
 "use client";
 
-import { Github, Linkedin, Mail } from "lucide-react";
+import { Github, Linkedin, Mail, Instagram } from "lucide-react";
 import { WhatsAppButton } from "./ui/whatsapp-button";
 import { WhatsAppIcon } from "./ui/whatsapp-icon";
 import { GsapAnim } from "./ui/gsap-anim";
@@ -24,7 +24,7 @@ export function Footer() {
         {/* Social links */}
         <div className="flex items-center gap-4">
           <a
-            href="https://github.com"
+            href="https://github.com/imleodeveloper/"
             target="_blank"
             rel="noopener noreferrer"
             className="p-2 rounded-full bg-gray-800 hover:bg-gray-700 text-muted hover:text-foreground transition-colors"
@@ -33,13 +33,22 @@ export function Footer() {
             <Github className="w-5 h-5" />
           </a>
           <a
-            href="https://linkedin.com"
+            href="https://www.linkedin.com/in/leonardovieiracarvalho-ti/"
             target="_blank"
             rel="noopener noreferrer"
             className="p-2 rounded-full bg-gray-800 hover:bg-gray-700 text-muted hover:text-foreground transition-colors"
             aria-label="LinkedIn"
           >
             <Linkedin className="w-5 h-5" />
+          </a>
+          <a
+            href="https://instagram.com/vierca.digital"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-2 rounded-full bg-gray-800 hover:bg-gray-700 text-muted hover:text-foreground transition-colors"
+            aria-label="Instagram"
+          >
+            <Instagram className="w-5 h-5" />
           </a>
           <a
             href="mailto:imleodeveloper@gmail.com"

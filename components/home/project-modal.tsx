@@ -20,6 +20,7 @@ export interface ProjectData {
   stacks?: string[];
   url: string;
   logo: string;
+  images?: string[];
   inDevelopment?: boolean;
 }
 
@@ -45,8 +46,9 @@ export function ProjectModal({ isOpen, onClose, project }: ProjectModalProps) {
 
   if (!project) return null;
 
-  // We show 3 identical slides for now as requested (since we only have the logo)
-  const slides = [1, 2, 3];
+  const slides = project.images && project.images.length > 0
+    ? project.images
+    : [project.logo];
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} maxWidth="max-w-[95vw] 2xl:max-w-[85vw]">
@@ -125,31 +127,19 @@ export function ProjectModal({ isOpen, onClose, project }: ProjectModalProps) {
               modules={[EffectCreative, Pagination, Autoplay]}
               className="w-full h-full"
             >
-              {slides.map((_, idx) => (
+              {slides.map((src, idx) => (
                 <SwiperSlide
                   key={idx}
-                  className="w-full h-full flex items-center justify-center p-0 m-0 bg-white dark:bg-gray-900"
+                  className="w-full h-full flex items-center justify-center p-0 m-0 bg-gray-950"
                 >
-                  <div className="w-full h-full relative flex items-center justify-center p-12">
-                    {/* Glowing background effect */}
-                    <div className="absolute inset-0 flex items-center justify-center opacity-30 blur-[100px]">
-                      <Image
-                        src={project.logo}
-                        alt="Glow"
-                        width={400}
-                        height={400}
-                        className="object-contain"
-                      />
-                    </div>
-                    {/* Main Image */}
-                    <div className="relative z-10 w-full max-w-lg aspect-square flex items-center justify-center drop-shadow-2xl hover:scale-105 transition-transform duration-700">
-                      <Image
-                        src={project.logo}
-                        alt={`${project.name} slide ${idx + 1}`}
-                        fill
-                        className="object-contain"
-                      />
-                    </div>
+                  <div className="w-full h-full relative">
+                    <Image
+                      src={src}
+                      alt={`${project.name} screenshot ${idx + 1}`}
+                      fill
+                      className="object-contain"
+                      sizes="(max-width: 768px) 100vw, 60vw"
+                    />
                   </div>
                 </SwiperSlide>
               ))}

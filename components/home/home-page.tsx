@@ -17,6 +17,12 @@ const PROJECTS: Record<string, ProjectData> = {
     stacks: ["Next.js", "TypeScript", "TailwindCSS", "PHP", "MySQL", "Baileys", "WhatsApp API"],
     url: "agendoaki.com",
     logo: "/agendoaki-logo-escrita.webp",
+    images: [
+      "/projects/web-systems/agendoaki/hero-section-client.webp",
+      "/projects/web-systems/agendoaki/appoint-panel.webp",
+      "/projects/web-systems/agendoaki/hero-section-client-mobile.webp",
+      "/projects/web-systems/agendoaki/appoint-panel-mobile.webp",
+    ],
   },
   dispareija: {
     id: "disparei-ja",
@@ -26,6 +32,12 @@ const PROJECTS: Record<string, ProjectData> = {
     stacks: ["Next.js", "TypeScript", "TailwindCSS", "Supabase", "Vercel", "GramJS", "Telethon", "BotFather API", "WhatsApp API", "Baileys"],
     url: "dispareija.com",
     logo: "/icon-disparei-ja.webp",
+    images: [
+      "/projects/web-systems/dispareija/hero-dispareija.webp",
+      "/projects/web-systems/dispareija/dash-dispareija.webp",
+      "/projects/web-systems/dispareija/hero-dispareija-mobile.webp",
+      "/projects/web-systems/dispareija/dash-dispareija-mobile.webp",
+    ],
   },
   crmorbis: {
     id: "viercrm",
@@ -35,6 +47,11 @@ const PROJECTS: Record<string, ProjectData> = {
     stacks: ["React (Vite)", "TypeScript", "TailwindCSS", "PHP", "MySQL"],
     url: "crm.vierca.com",
     logo: "/icon-vierca-svg.svg",
+    images: [
+      "/projects/web-systems/crm-vierca/crm-dash.webp",
+      "/projects/web-systems/crm-vierca/crm-kanban.webp",
+      "/projects/web-systems/crm-vierca/hero-orbis.webp",
+    ],
     inDevelopment: true,
   }
 };

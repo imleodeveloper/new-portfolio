@@ -28,6 +28,7 @@ type SiteProject = {
   longDescription: string;
   stacks: string[];
   url?: string;
+  screenshot?: string;
   inDevelopment?: boolean;
 };
 
@@ -146,6 +147,12 @@ const SISTEMAS: ProjectData[] = [
     stacks: ["Next.js", "TypeScript", "TailwindCSS", "PHP", "MySQL", "Baileys", "WhatsApp API"],
     url: "agendoaki.com",
     logo: "/agendoaki-logo-escrita.webp",
+    images: [
+      "/projects/web-systems/agendoaki/hero-section-client.webp",
+      "/projects/web-systems/agendoaki/appoint-panel.webp",
+      "/projects/web-systems/agendoaki/hero-section-client-mobile.webp",
+      "/projects/web-systems/agendoaki/appoint-panel-mobile.webp",
+    ],
   },
   {
     id: "disparei-ja",
@@ -155,6 +162,12 @@ const SISTEMAS: ProjectData[] = [
     stacks: ["Next.js", "TypeScript", "TailwindCSS", "Supabase", "Vercel", "GramJS", "Telethon", "WhatsApp API"],
     url: "dispareija.com",
     logo: "/icon-disparei-ja.webp",
+    images: [
+      "/projects/web-systems/dispareija/hero-dispareija.webp",
+      "/projects/web-systems/dispareija/dash-dispareija.webp",
+      "/projects/web-systems/dispareija/hero-dispareija-mobile.webp",
+      "/projects/web-systems/dispareija/dash-dispareija-mobile.webp",
+    ],
   },
   {
     id: "viercrm",
@@ -164,6 +177,11 @@ const SISTEMAS: ProjectData[] = [
     stacks: ["React (Vite)", "TypeScript", "TailwindCSS", "PHP", "MySQL"],
     url: "crm.vierca.com",
     logo: "/icon-vierca-svg.svg",
+    images: [
+      "/projects/web-systems/crm-vierca/crm-dash.webp",
+      "/projects/web-systems/crm-vierca/crm-kanban.webp",
+      "/projects/web-systems/crm-vierca/hero-orbis.webp",
+    ],
     inDevelopment: true,
   },
 ];
@@ -217,6 +235,7 @@ const SITE_PROJECTS: SiteProject[] = [
     longDescription: "Site da VierCa apresentando serviços, portfólio e contato. Next.js no front-end com TailwindCSS v4, SEO técnico e deploy otimizado.",
     stacks: ["Next.js", "TailwindCSS v4", "TypeScript"],
     url: "vierca.com",
+    screenshot: "/projects/web-systems/vierca.png",
   },
   {
     id: "meca-importacoes",
@@ -229,6 +248,7 @@ const SITE_PROJECTS: SiteProject[] = [
     longDescription: "Desenvolvido com React + Vite, o site da Meca Importações apresenta catálogo de produtos, página institucional e formulário de contato.",
     stacks: ["React", "Vite", "CSS"],
     url: "mecaimportacoes.com.br",
+    screenshot: "/projects/web-systems/mecaimportacoes.png",
   },
   {
     id: "lustra-omega",
@@ -241,6 +261,7 @@ const SITE_PROJECTS: SiteProject[] = [
     longDescription: "Desenvolvida em JavaScript puro sem frameworks. HTML semântico, CSS vanilla e JS nativo para animações e interatividade.",
     stacks: ["HTML", "CSS", "JavaScript"],
     url: "lustraomega.com.br",
+    screenshot: "/projects/web-systems/lustraomega.png",
   },
   {
     id: "fabio-silva-contabilidade",
@@ -253,6 +274,7 @@ const SITE_PROJECTS: SiteProject[] = [
     longDescription: "Site institucional em JavaScript puro. Layout responsivo com CSS Grid e Flexbox, animações nativas e SEO otimizado.",
     stacks: ["HTML", "CSS", "JavaScript"],
     url: "fabiosilvacontabilidade.com.br",
+    screenshot: "/projects/web-systems/fabiosilvacontabilidade.png",
   },
   {
     id: "vizsil-contabilidade",
@@ -277,6 +299,7 @@ const SITE_PROJECTS: SiteProject[] = [
     longDescription: "E-commerce de roupas de time com painel administrativo completo para gestão de produtos, pedidos e clientes. Sem gateway de pagamento integrado.",
     stacks: ["Next.js", "TypeScript", "TailwindCSS", "PHP", "MySQL"],
     url: "negossocios.store",
+    screenshot: "/projects/web-systems/negossocios.png",
   },
   {
     id: "adega-da-garagem",
@@ -449,6 +472,11 @@ function SiteModal({ project, onClose }: { project: SiteProject; onClose: () => 
 
         {/* Body */}
         <div className="p-6 flex flex-col gap-5">
+          {project.screenshot && (
+            <div className="w-full h-44 relative rounded-xl overflow-hidden border border-gray-100 dark:border-gray-800">
+              <Image src={project.screenshot} alt={`${project.name} screenshot`} fill className="object-cover object-top" />
+            </div>
+          )}
           <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{project.longDescription}</p>
           <div>
             <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-3">Stack utilizada</p>
