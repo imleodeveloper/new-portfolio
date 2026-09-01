@@ -14,7 +14,6 @@ export interface LeadPayload {
   telefone:          string;
   contactPreference: ContactPreference;
   serviceType:       ServiceType;
-  fullName?:         string;
   companyName?:      string;
   companyServices?:  string;
   briefingAnswers:   Record<string, string>;
@@ -95,7 +94,6 @@ export function validateLeadPayload(body: unknown): ValidationResult {
   if (!VALID_SERVICE_TYPES.has(serviceType))
     errors.serviceType = "Tipo de serviço inválido.";
 
-  const fullName        = trimStr(b.fullName, 120);
   const companyName     = trimStr(b.companyName, 120);
   const companyServices = trimStr(b.companyServices, 500);
 
@@ -112,6 +110,6 @@ export function validateLeadPayload(body: unknown): ValidationResult {
   return {
     ok: true,
     errors: {},
-    cleaned: { nome, telefone: phone.digits, contactPreference, serviceType, fullName, companyName, companyServices, briefingAnswers },
+    cleaned: { nome, telefone: phone.digits, contactPreference, serviceType, companyName, companyServices, briefingAnswers },
   };
 }

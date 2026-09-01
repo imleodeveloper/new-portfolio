@@ -20,7 +20,7 @@ export function getPool(): mysql.Pool {
     password:           required("DB_PASS"),
     waitForConnections: true,
     connectionLimit:    5,
-    timezone:           "Z",
+    timezone:           "-03:00",
     charset:            "utf8mb4",
   });
 

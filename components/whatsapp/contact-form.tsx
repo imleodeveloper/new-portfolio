@@ -21,7 +21,6 @@ const INITIAL_FORM: Partial<Lead> = {
   telefone: "",
   contactPreference: undefined,
   serviceType: undefined,
-  fullName: "",
   companyName: "",
   companyServices: "",
   briefingAnswers: {},
@@ -31,9 +30,23 @@ export function ContactForm({ onClose }: { onClose: () => void }) {
   const [mode, setMode] = useState<FormMode>("manual");
   const [form, setForm] = useState<Partial<Lead>>(INITIAL_FORM);
   const [errors, setErrors] = useState<FormErrors>({});
+  const [pulsingField, setPulsingField] = useState<keyof FormErrors | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [submittedLead, setSubmittedLead] = useState<Lead | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Refs para scroll e foco nos campos com erro
+  const nomeRef          = useRef<HTMLInputElement>(null);
+  const telefoneRef      = useRef<HTMLInputElement>(null);
+  const contactPrefRef   = useRef<HTMLDivElement>(null);
+  const serviceTypeRef   = useRef<HTMLDivElement>(null);
+
+  const fieldRefs: Record<keyof FormErrors, React.RefObject<HTMLElement | null>> = {
+    nome:              nomeRef,
+    telefone:          telefoneRef,
+    contactPreference: contactPrefRef,
+    serviceType:       serviceTypeRef,
+  };
 
   // Restore draft from localStorage on mount
   useEffect(() => {
@@ -93,29 +106,51 @@ export function ContactForm({ onClose }: { onClose: () => void }) {
     [updateField]
   );
 
+  const scrollToFirstError = useCallback((errs: FormErrors) => {
+    const order: (keyof FormErrors)[] = ["nome", "telefone", "contactPreference", "serviceType"];
+    const firstKey = order.find((k) => errs[k]);
+    if (!firstKey) return;
+    const ref = fieldRefs[firstKey];
+    ref.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    if (firstKey === "nome") nomeRef.current?.focus();
+    if (firstKey === "telefone") telefoneRef.current?.focus();
+    // Pulsa 3x e remove a classe
+    setPulsingField(firstKey);
+    setTimeout(() => setPulsingField(null), 2200);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const validate = useCallback((): boolean => {
     const newErrors: FormErrors = {};
 
-    if (!form.nome || form.nome.trim().length < 2) {
-      newErrors.nome = "Nome é obrigatório (mín. 2 caracteres)";
+    const nome = (form.nome || "").trim();
+    const nomeWords = nome.split(/\s+/).filter((w) => w.length >= 2);
+    if (!nome || nome.length < 4) {
+      newErrors.nome = "Nome é obrigatório.";
+    } else if (nomeWords.length < 2) {
+      newErrors.nome = "Informe seu nome completo (nome e sobrenome).";
     }
 
     const phoneDigits = (form.telefone || "").replace(/\D/g, "");
     if (!phoneDigits || phoneDigits.length < 10) {
-      newErrors.telefone = "Telefone válido é obrigatório";
+      newErrors.telefone = "Telefone válido é obrigatório.";
     }
 
     if (!form.contactPreference) {
-      newErrors.contactPreference = "Selecione uma preferência de contato";
+      newErrors.contactPreference = "Selecione uma preferência de contato.";
     }
 
     if (!form.serviceType) {
-      newErrors.serviceType = "Selecione um tipo de serviço";
+      newErrors.serviceType = "Selecione um tipo de serviço.";
     }
 
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  }, [form]);
+    if (Object.keys(newErrors).length > 0) {
+      scrollToFirstError(newErrors);
+      return false;
+    }
+    return true;
+  }, [form, scrollToFirstError]);
 
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -128,7 +163,6 @@ export function ContactForm({ onClose }: { onClose: () => void }) {
       telefone:          form.telefone!,
       contactPreference: form.contactPreference!,
       serviceType:       form.serviceType!,
-      fullName:          form.fullName  || undefined,
       companyName:       form.companyName || undefined,
       companyServices:   form.companyServices || undefined,
       briefingAnswers:   form.briefingAnswers || {},
@@ -147,11 +181,23 @@ export function ContactForm({ onClose }: { onClose: () => void }) {
       const data = await res.json();
 
       if (!res.ok) {
-        // Mostrar o primeiro erro de campo retornado pelo backend
-        const firstError = Object.values(data?.errors ?? {}).find(
-          (v): v is string => typeof v === "string"
-        );
-        setSubmitError(firstError ?? "Erro ao enviar. Tente novamente.");
+        const backendErrors = data?.errors ?? {};
+        const fieldKeys: (keyof FormErrors)[] = ["nome","telefone","contactPreference","serviceType"];
+        const fieldErrs: FormErrors = {};
+        let hasFieldError = false;
+        for (const k of fieldKeys) {
+          if (typeof backendErrors[k] === "string") {
+            fieldErrs[k] = backendErrors[k];
+            hasFieldError = true;
+          }
+        }
+        if (hasFieldError) {
+          setErrors(fieldErrs);
+          scrollToFirstError(fieldErrs);
+        } else {
+          const msg = Object.values(backendErrors).find((v): v is string => typeof v === "string");
+          setSubmitError(msg ?? "Erro ao enviar. Tente novamente.");
+        }
         return;
       }
 
@@ -268,13 +314,14 @@ export function ContactForm({ onClose }: { onClose: () => void }) {
                 Nome <span className="text-error">*</span>
               </label>
               <input
+                ref={nomeRef}
                 type="text"
                 value={form.nome || ""}
                 onChange={(e) => updateField("nome", e.target.value)}
                 placeholder="Seu nome completo"
                 className={`w-full px-3 py-2 rounded-lg border bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors ${
                   errors.nome ? "border-red-500" : "border-gray-300 dark:border-gray-700"
-                }`}
+                } ${pulsingField === "nome" ? "error-pulse" : ""}`}
               />
               {errors.nome && (
                 <p className="text-red-500 text-xs mt-1">{errors.nome}</p>
@@ -286,13 +333,14 @@ export function ContactForm({ onClose }: { onClose: () => void }) {
                 Telefone <span className="text-red-500">*</span>
               </label>
               <input
+                ref={telefoneRef}
                 type="tel"
                 value={form.telefone || ""}
                 onChange={(e) => handlePhoneChange(e.target.value)}
                 placeholder="(11) 99999-9999"
                 className={`w-full px-3 py-2 rounded-lg border bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors ${
                   errors.telefone ? "border-red-500" : "border-gray-300 dark:border-gray-700"
-                }`}
+                } ${pulsingField === "telefone" ? "error-pulse" : ""}`}
               />
               {errors.telefone && (
                 <p className="text-red-500 text-xs mt-1">{errors.telefone}</p>
@@ -301,7 +349,7 @@ export function ContactForm({ onClose }: { onClose: () => void }) {
           </div>
 
           {/* Contact preference */}
-          <div>
+          <div ref={contactPrefRef} className={pulsingField === "contactPreference" ? "error-pulse rounded-lg p-1 -m-1" : ""}>
             <label className="block text-sm font-semibold mb-2">
               Preferência de Contato <span className="text-red-500">*</span>
             </label>
@@ -357,13 +405,6 @@ export function ContactForm({ onClose }: { onClose: () => void }) {
             <div className="flex flex-col gap-3">
               <input
                 type="text"
-                value={form.fullName || ""}
-                onChange={(e) => updateField("fullName", e.target.value)}
-                placeholder="Nome completo"
-                className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors"
-              />
-              <input
-                type="text"
                 value={form.companyName || ""}
                 onChange={(e) => updateField("companyName", e.target.value)}
                 placeholder="Nome da empresa"
@@ -380,7 +421,7 @@ export function ContactForm({ onClose }: { onClose: () => void }) {
           </div>
 
           {/* Service selection */}
-          <div>
+          <div ref={serviceTypeRef} className={pulsingField === "serviceType" ? "error-pulse rounded-lg p-1 -m-1" : ""}>
             <label className="block text-sm font-semibold mb-2">
               Tipo de Serviço <span className="text-error">*</span>
             </label>

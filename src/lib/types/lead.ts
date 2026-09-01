@@ -15,8 +15,6 @@ export interface Lead {
   telefone: string;
   contactPreference: ContactPreference;
   serviceType: ServiceType;
-  /** Nome completo (company briefing) */
-  fullName?: string;
   /** Nome da empresa */
   companyName?: string;
   /** Quais serviços a empresa presta */

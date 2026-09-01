@@ -88,39 +88,25 @@ export async function POST(req: NextRequest) {
     }
 
     // ── Inserir lead (id gerado pelo MySQL com DEFAULT (UUID())) ───────────
+    const briefingJson = Object.keys(cleaned.briefingAnswers).length > 0
+      ? JSON.stringify(cleaned.briefingAnswers)
+      : null;
+
     await conn.execute(
       `INSERT INTO leads
          (nome, telefone, contact_preference, service_type,
-          full_name, company_name, company_services, created_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, UTC_TIMESTAMP(3))`,
+          company_name, company_services, briefing_answers, created_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, NOW(3))`,
       [
         cleaned.nome,
         cleaned.telefone,
         cleaned.contactPreference,
         cleaned.serviceType,
-        cleaned.fullName        ?? null,
         cleaned.companyName     ?? null,
         cleaned.companyServices ?? null,
+        briefingJson,
       ]
     );
-
-    // ── Recuperar o UUID gerado pelo MySQL ─────────────────────────────────
-    const [newRow] = await conn.execute<RowDataPacket[]>(
-      "SELECT id FROM leads WHERE telefone = ? ORDER BY created_at DESC LIMIT 1",
-      [cleaned.telefone]
-    );
-    const leadId = newRow[0]?.id as string | undefined;
-
-    // ── Inserir respostas do briefing ──────────────────────────────────────
-    const answers = Object.entries(cleaned.briefingAnswers);
-    if (answers.length > 0 && leadId) {
-      const placeholders = answers.map(() => "(?, ?, ?)").join(", ");
-      const values = answers.flatMap(([k, v]) => [leadId, k, v]);
-      await conn.execute(
-        `INSERT INTO briefing_answers (lead_id, answer_key, answer_value) VALUES ${placeholders}`,
-        values
-      );
-    }
 
     return NextResponse.json({ success: true }, { status: 201 });
   } catch (err) {
