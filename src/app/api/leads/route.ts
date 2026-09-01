@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getPool } from "@/lib/db";
 import { validateLeadPayload, normalizeCompanyName } from "@/lib/validate-lead";
+import { sendLeadNotification } from "@/lib/mailer";
 import type { RowDataPacket } from "mysql2";
 
 // ─── Rate limiting ────────────────────────────────────────────────────────────
@@ -107,6 +108,17 @@ export async function POST(req: NextRequest) {
         briefingJson,
       ]
     );
+
+    // Notificação por e-mail — fire-and-forget, erro não afeta o usuário
+    void sendLeadNotification({
+      nome:              cleaned.nome,
+      telefone:          cleaned.telefone,
+      contactPreference: cleaned.contactPreference,
+      serviceType:       cleaned.serviceType,
+      companyName:       cleaned.companyName ?? null,
+      companyServices:   cleaned.companyServices ?? null,
+      briefingAnswers:   cleaned.briefingAnswers,
+    });
 
     return NextResponse.json({ success: true }, { status: 201 });
   } catch (err) {
