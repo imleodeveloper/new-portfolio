@@ -79,17 +79,50 @@ function detectPreference(text: string): Lead["contactPreference"] | null {
   return null;
 }
 
-function getAIReply(stage: ConversationStage): string {
+function getNextBriefingQuestion(collectedData: Partial<Lead>): { label: string; key: string } | null {
+  const svc = SERVICES.find((s) => s.id === collectedData.serviceType);
+  if (!svc) return null;
+  const answered = collectedData.briefingAnswers ?? {};
+  return svc.briefingQuestions.find((q) => !answered[q.key]) ?? null;
+}
+
+function allBriefingAnswered(collectedData: Partial<Lead>): boolean {
+  const svc = SERVICES.find((s) => s.id === collectedData.serviceType);
+  if (!svc || svc.briefingQuestions.length === 0) return true;
+  const answered = collectedData.briefingAnswers ?? {};
+  return svc.briefingQuestions.every((q) => answered[q.key]);
+}
+
+function getAIReply(stage: ConversationStage, collectedData: Partial<Lead>): string {
   switch (stage) {
     case "askName":       return pickRandom(AI_TEMPLATES.askName);
     case "askPhone":      return pickRandom(AI_TEMPLATES.askPhone);
     case "askCompany":    return pickRandom(AI_COMPANY_Q);
     case "askService":    return pickRandom(AI_TEMPLATES.askService);
     case "askPreference": return pickRandom(AI_TEMPLATES.askPreference);
-    case "collectInfo":   return pickRandom(AI_TEMPLATES.collectInfo);
+    case "collectInfo": {
+      const q = getNextBriefingQuestion(collectedData);
+      return q ? q.label : pickRandom(AI_TEMPLATES.collectInfo);
+    }
     case "finalize":      return pickRandom(AI_TEMPLATES.finalize);
     default:              return pickRandom(AI_TEMPLATES.collectInfo);
   }
+}
+
+/** Retorna true se deve ficar em collectInfo (ainda há perguntas abertas) */
+function shouldStayInCollectInfo(collectedData: Partial<Lead>): boolean {
+  return !allBriefingAnswered(collectedData);
+}
+
+/** Quick replies para collectInfo: Sim/Não para perguntas binárias, nada para abertas */
+function getCollectInfoReplies(collectedData: Partial<Lead>): string[] {
+  const q = getNextBriefingQuestion(collectedData);
+  if (!q) return [];
+  const l = q.label.toLowerCase();
+  const isBinary =
+    l.startsWith("já ") || l.startsWith("tem ") || l.startsWith("precisa") ||
+    l.includes("possui") || l.includes("precisa de") || l.includes("necessita");
+  return isBinary ? ["Sim", "Não"] : [];
 }
 
 export function AIChat({ form, onPrefill }: AIChatProps) {
@@ -181,16 +214,21 @@ export function AIChat({ form, onPrefill }: AIChatProps) {
 
     await delay(1100 + Math.random() * 900);
 
-    const idx = STAGE_ORDER.indexOf(currentStage);
-    const nextStage: ConversationStage =
-      idx < STAGE_ORDER.length - 1 ? STAGE_ORDER[idx + 1] : "finalize";
+    let nextStage: ConversationStage;
+    if (currentStage === "collectInfo" && shouldStayInCollectInfo(collected.current)) {
+      // Ainda há perguntas de briefing — fica em collectInfo
+      nextStage = "collectInfo";
+    } else {
+      const idx = STAGE_ORDER.indexOf(currentStage);
+      nextStage = idx < STAGE_ORDER.length - 1 ? STAGE_ORDER[idx + 1] : "finalize";
+    }
 
     stageRef.current = nextStage;
     setStage(nextStage);
 
     setMessages((prev) => [
       ...prev,
-      { id: nextId(), role: "assistant", content: getAIReply(nextStage), timestamp: Date.now() },
+      { id: nextId(), role: "assistant", content: getAIReply(nextStage, collected.current), timestamp: Date.now() },
     ]);
 
     isThinkingRef.current = false;
@@ -218,14 +256,9 @@ export function AIChat({ form, onPrefill }: AIChatProps) {
   }, [handleSend]);
 
   // Quick replies dinâmicos para o stage atual
-  const quickReplies: string[] = (() => {
-    if (stage === "collectInfo" && serviceId) {
-      const svc = SERVICES.find((s) => s.id === serviceId);
-      const answered = collected.current.briefingAnswers ?? {};
-      return svc?.briefingQuestions.filter((q) => !answered[q.key]).map((q) => q.label) ?? [];
-    }
-    return QUICK_REPLIES[stage] ?? [];
-  })();
+  const quickReplies: string[] = stage === "collectInfo"
+    ? getCollectInfoReplies(collected.current)
+    : (QUICK_REPLIES[stage] ?? []);
 
   return (
     <div className="flex flex-col flex-1">
