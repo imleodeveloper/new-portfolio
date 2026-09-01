@@ -32,6 +32,7 @@ export function ContactForm({ onClose }: { onClose: () => void }) {
   const [form, setForm] = useState<Partial<Lead>>(INITIAL_FORM);
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitted, setSubmitted] = useState(false);
+  const [submittedLead, setSubmittedLead] = useState<Lead | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Restore draft from localStorage on mount
@@ -116,31 +117,60 @@ export function ContactForm({ onClose }: { onClose: () => void }) {
     return Object.keys(newErrors).length === 0;
   }, [form]);
 
-  const handleSubmit = useCallback(() => {
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = useCallback(async () => {
     if (!validate()) return;
 
-    const lead: Lead = {
-      id: crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36),
-      nome: form.nome!.trim(),
-      telefone: form.telefone!,
+    const payload = {
+      nome:              form.nome!.trim(),
+      telefone:          form.telefone!,
       contactPreference: form.contactPreference!,
-      serviceType: form.serviceType!,
-      fullName: form.fullName || undefined,
-      companyName: form.companyName || undefined,
-      companyServices: form.companyServices || undefined,
-      briefingAnswers: form.briefingAnswers || {},
-      createdAt: new Date().toISOString(),
+      serviceType:       form.serviceType!,
+      fullName:          form.fullName  || undefined,
+      companyName:       form.companyName || undefined,
+      companyServices:   form.companyServices || undefined,
+      briefingAnswers:   form.briefingAnswers || {},
     };
 
-    addContactLead(lead);
-    clearFormDraft();
-    setSubmitted(true);
+    setIsSubmitting(true);
+    setSubmitError(null);
 
-    // Close modal after a brief moment to show success message
-    setTimeout(() => {
-      onClose();
-    }, 2000);
-  }, [form, validate, onClose]);
+    try {
+      const res = await fetch("/api/leads", {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        // Mostrar o primeiro erro de campo retornado pelo backend
+        const firstError = Object.values(data?.errors ?? {}).find(
+          (v): v is string => typeof v === "string"
+        );
+        setSubmitError(firstError ?? "Erro ao enviar. Tente novamente.");
+        return;
+      }
+
+      // Sucesso — salva localmente só para o log visual e limpa o draft
+      const lead: Lead = {
+        id: "",
+        ...payload,
+        createdAt: new Date().toISOString(),
+      };
+      addContactLead(lead);
+      clearFormDraft();
+      setSubmittedLead(lead);
+      setSubmitted(true);
+    } catch {
+      setSubmitError("Não foi possível conectar ao servidor. Tente novamente.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [form, validate]);
 
   const handleAiPrefill = useCallback(
     (filledData: Partial<Lead>) => {
@@ -152,18 +182,51 @@ export function ContactForm({ onClose }: { onClose: () => void }) {
 
   const selectedService = SERVICES.find((s) => s.id === form.serviceType);
 
-  if (submitted) {
+  if (submitted && submittedLead) {
     return (
-      <div className="flex flex-col items-center justify-center py-12 px-6 text-center">
-        <div className="w-16 h-16 rounded-full bg-success/20 flex items-center justify-center mb-4">
-          <svg className="w-8 h-8 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-          </svg>
+      <div className="flex flex-col gap-6 p-6">
+        {/* Thank you header */}
+        <div className="flex flex-col items-center text-center gap-3">
+          <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center">
+            <svg className="w-8 h-8 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <div>
+            <h3 className="text-2xl font-extrabold text-gray-900 dark:text-white">Obrigado, {submittedLead.nome.split(" ")[0]}!</h3>
+            <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
+              Briefing recebido com sucesso. Entraremos em contato em breve pelo {submittedLead.contactPreference === "phone-call" ? "telefone" : "WhatsApp"} informado.
+            </p>
+          </div>
         </div>
-        <h3 className="text-xl font-bold mb-2">Enviado com sucesso!</h3>
-        <p className="text-muted text-sm">
-          Entraremos em contato em breve pelo WhatsApp ou telefone informado.
-        </p>
+
+        {/* Payload log */}
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Payload — log do backend</span>
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 font-bold uppercase">Preview</span>
+          </div>
+          <div className="relative rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700">
+            <div className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+              <div className="w-3 h-3 rounded-full bg-red-400" />
+              <div className="w-3 h-3 rounded-full bg-yellow-400" />
+              <div className="w-3 h-3 rounded-full bg-green-400" />
+              <span className="ml-2 text-xs text-gray-500 dark:text-gray-400 font-mono">POST /api/leads</span>
+            </div>
+            <pre className="text-xs font-mono p-4 bg-gray-950 text-green-400 overflow-x-auto whitespace-pre leading-relaxed max-h-64 overflow-y-auto">
+              {JSON.stringify(submittedLead, null, 2)}
+            </pre>
+          </div>
+        </div>
+
+        {/* Close button */}
+        <button
+          type="button"
+          onClick={onClose}
+          className="w-full py-3 rounded-lg bg-green-600 text-white font-bold text-sm uppercase hover:bg-green-500 transition-colors cursor-pointer shadow-lg shadow-green-500/20"
+        >
+          Fechar
+        </button>
       </div>
     );
   }
@@ -371,13 +434,21 @@ export function ContactForm({ onClose }: { onClose: () => void }) {
             </div>
           )}
 
+          {/* Submit error */}
+          {submitError && (
+            <p className="text-red-500 text-sm text-center bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 rounded-lg px-4 py-2">
+              {submitError}
+            </p>
+          )}
+
           {/* Submit button */}
           <button
             type="button"
-            onClick={handleSubmit}
-            className="w-full py-3 mt-4 rounded-lg bg-green-600 text-white font-bold text-sm uppercase hover:bg-green-500 transition-colors cursor-pointer shadow-lg shadow-green-500/20"
+            onClick={() => { void handleSubmit(); }}
+            disabled={isSubmitting}
+            className="w-full py-3 mt-4 rounded-lg bg-green-600 text-white font-bold text-sm uppercase hover:bg-green-500 disabled:opacity-60 disabled:cursor-not-allowed transition-colors cursor-pointer shadow-lg shadow-green-500/20"
           >
-            Enviar Briefing
+            {isSubmitting ? "Enviando..." : "Enviar Briefing"}
           </button>
         </div>
       ) : (
