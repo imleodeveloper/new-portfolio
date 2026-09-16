@@ -1,6 +1,6 @@
 "use client";
 import {
-  Crown, Github, Linkedin, Sun, Moon, Instagram
+  Crown, Github, Linkedin, Sun, Moon, Instagram, FileDown
 } from "lucide-react";
 import Image from "next/image";
 import { useLayoutEffect, useRef, useState, useEffect } from "react";
@@ -91,7 +91,17 @@ export function Header() {
           <div className="hidden md:flex h-full">
             <WhatsAppButton variant="icon-only" className="border-r border-gray-200 dark:border-gray-700 px-4 transition-colors duration-300" />
           </div>
-          
+
+          <a
+            href="/cv_leonardo_vieira_dev.pdf"
+            download
+            className="hidden md:flex flex-col justify-center items-center gap-1 h-full px-4 border-r border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors duration-300 group"
+            title="Baixar Currículo"
+          >
+            <FileDown className="w-5 h-5 text-red-500 group-hover:scale-110 transition-transform duration-200" />
+            <span className="text-[10px] font-bold uppercase text-gray-600 dark:text-gray-400">CV</span>
+          </a>
+
           <div className="hidden sm:flex h-full">
             <ThemeToggle />
           </div>
@@ -138,6 +148,11 @@ export function Header() {
                   <span className="font-semibold text-sm text-gray-200">Contratar Serviços</span>
                 </button>
                 
+                <a href="/cv_leonardo_vieira_dev.pdf" download className="md:hidden w-full h-14 flex items-center justify-start px-4 hover:bg-white/10 transition-colors border-b border-gray-800/50 gap-3">
+                  <FileDown className="w-5 h-5 text-red-500" />
+                  <span className="font-semibold text-sm text-gray-200">Baixar Currículo</span>
+                </a>
+
                 <button onClick={toggleTheme} className="sm:hidden w-full h-14 flex items-center justify-start px-4 hover:bg-white/10 transition-colors gap-3">
                   {!isDark ? <Sun className="w-5 h-5 text-yellow-500" /> : <Moon className="w-5 h-5 text-gray-300" />}
                   <span className="font-semibold text-sm text-gray-200">Tema ({isDark ? 'Light' : 'Dark'})</span>
